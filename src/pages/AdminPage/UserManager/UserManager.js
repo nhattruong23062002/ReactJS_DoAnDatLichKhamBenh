@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "../../../styles/mainAdmin.css";
 import axios from "axios";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
@@ -11,30 +11,16 @@ import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { Button, Input, Space, Table } from "antd";
 import ModalDelete from "../../../component/ModalDelete";
+import { useLocation } from "react-router-dom";
 
 const UserManager = () => {
   const [user, setUser] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [gender, setGender] = useState("");
-  const [roleId, setRole] = useState("");
-  const [positionId, setPosition] = useState("");
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [show, setShow] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const queryValue = searchParams.get("query");
 
   const searchInput = useRef(null);
 
@@ -42,11 +28,14 @@ const UserManager = () => {
 
   const getAllUser = async () => {
     try {
-      const response = await axios.get("http://localhost:3333/users", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `http://localhost:3333/users?role=${queryValue || ''}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setUser(response.data.payload);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -56,7 +45,6 @@ const UserManager = () => {
   useEffect(() => {
     getAllUser();
   }, []);
-
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -213,55 +201,17 @@ const UserManager = () => {
       width: "15%",
       render: (text, record) => (
         <span>
+         <Link to={`/admin/user-manage/updateUser/${record.id}`}>
+            <PiPencilSimpleLineFill
+              className="icon-update"
+            />
+          </Link>
           <a>
-            <PiPencilSimpleLineFill className="icon-update" 
-             onClick={() => {
-              handleShow();
-              setFirstName(record.firstName);
-              setLastName(record.lastName);
-              setPhoneNumber(record.phoneNumber);
-              setEmail(record.email);
-              setAddress(record.address);
-              setRole(record.roleId);
-              setGender(record.gender);
-              setPosition(record.positionId);
-            }}
-            />
-            <UpdateUser
-              handleSubmitUpdate={() => {
-                handleSubmitUpdate(record.id);
-              }}
-              show={show}
-              handleClose={handleClose}
-              firstName={firstName}
-              lastName={lastName}
-              phoneNumber={phoneNumber}
-              email={email}
-              address={address}
-              roleId={roleId}
-              gender={gender}
-              positionId={positionId}
-              setEmail={setEmail}
-              setLastName={setLastName}
-              setPhoneNumber={setPhoneNumber}
-              setFirstName={setFirstName}
-              setAddress={setAddress}
-              handleRoleChange={handleRoleChange}
-              handleGenderChange={handleGenderChange}
-              handlePositionChange={handlePositionChange}
-            />
-          </a>
-          <a
-            onClick={() => {
-              showModal();
-              /* handleDeleteUser(record.id); */
-            }}
-            >
-            <MdDeleteForever className="icon-delete" />
+            <MdDeleteForever className="icon-delete" onClick={() =>  handleShow(record.id)}/>
             <ModalDelete
-             isModalOpen = {isModalOpen}
-             handleCancel = {handleCancel}
-             handleOk = {handleOk}
+              isModalOpen={show}
+              handleOk={handleDeleteUser}
+              handleCancel={handleCancel}
             />
           </a>
         </span>
@@ -269,9 +219,8 @@ const UserManager = () => {
     },
   ];
 
-  const handleClose = () => setShow(false);
+  const handleCancel = () => setShow(false);
   const handleShow = () => setShow(true);
-
 
   const handleDeleteUser = async (id) => {
     try {
@@ -287,35 +236,6 @@ const UserManager = () => {
     }
   };
 
-  const handleSubmitUpdate = async (idUpdate) => {
-    try {
-      const response = await axios.patch(
-        `http://localhost:3333/users/${idUpdate}`,
-        {
-          firstName,
-          lastName,
-          email,
-          address,
-          phoneNumber,
-          gender: gender,
-          positionId: positionId,
-          roleId: roleId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setShow(false);
-      getAllUser();
-      console.log("Response from server:", response.data);
-    } catch (error) {
-      console.error("Error:", error);
-      alert('Có lỗi thông tin muốn cập nhật')
-      setShow(false);
-    }
-  };
 
   useEffect(() => {
     const $ = window.$;
@@ -328,20 +248,15 @@ const UserManager = () => {
     };
   }, []);
 
-  const handleGenderChange = (e) => {
-    const selectedGender = e.target.value;
-    setGender(selectedGender);
-  };
+  let message;
 
-  const handleRoleChange = (e) => {
-    const selectedRole = e.target.value;
-    setRole(selectedRole);
-  };
-
-  const handlePositionChange = (e) => {
-    const selectedPosition = e.target.value;
-    setPosition(selectedPosition);
-  };
+  if (queryValue === "R2") {
+    message = "Danh sách Bác sĩ";
+  } else if (queryValue === "R3") {
+    message = "Danh sách Bệnh nhân";
+  } else {
+    message = "Danh sách User";
+  }
 
   return (
     <main className="app-content">
@@ -349,7 +264,7 @@ const UserManager = () => {
         <ul className="app-breadcrumb breadcrumb side">
           <li className="breadcrumb-item active">
             <a href="#">
-              <b>Danh sách User</b>
+              <b>{message}</b>
             </a>
           </li>
         </ul>

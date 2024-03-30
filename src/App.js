@@ -29,6 +29,9 @@ import ResetPassword from "./pages/resetPassword";
 import ChangePassword from "./pages/UserPage/ChangePassword";
 import BookingSuccess from "./pages/UserPage/BookingSuccess";
 import MainDashboardAdmin from "./pages/AdminPage/DashBoard/MainDashboardAdmin";
+import UpdateSpecialty from "./pages/AdminPage/ManageSpecialty/UpdateSpecialty";
+import UpdateClinic from "./pages/AdminPage/ManageClinic/UpdateClinic";
+import UpdateUser from "./pages/AdminPage/UserManager/UpdateUser";
 
 function App() {
   return (
@@ -58,11 +61,14 @@ function App() {
         <Route path="/admin" element={<LayoutAdmin />}>
           <Route path="/admin/user-manage" element={<UserManager />} />
           <Route path="/admin/user-manage/addUser" element={<AddUser />} />
+          <Route path="/admin/user-manage/updateUser/:id" element={<UpdateUser />} />
           <Route path="/admin/doctor-manage" element={<DoctorManage />} />
           <Route path="/admin/specialty-manager" element={<SpecialtyManager/>} />
           <Route path="/admin/specialty-manager/addSpecialty" element={<AddSpecialty />} />
+          <Route path="/admin/specialty-manager/updateSpecialty/:id" element={<UpdateSpecialty />} />
           <Route path="/admin/clinic-manager" element={<ClinicManager />} />
           <Route path="/admin/clinic-manager/addClinic" element={<AddClinic />} />
+          <Route path="/admin/clinic-manager/updateClinic/:id" element={<UpdateClinic />} />
           <Route path="/admin/dashboard" element={<MainDashboardAdmin/>} />
         </Route>
         <Route path="/doctor" element={<LayoutAdmin />}>

@@ -240,10 +240,9 @@ export default (props) => {
     }
   };
 
-
   return (
     <>
-      <h2 className="doctor-title">Thêm thông tin cho bác sĩ</h2>
+      <h3 className="doctor-title">Thêm thông tin cho bác sĩ</h3>
       <div className="more-info-doctor">
         <div className="content-doctor-left">
           <h6 className="control-label">Thông tin giới thiệu</h6>

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { AiOutlineDashboard } from "react-icons/ai";
 import { BsFillPeopleFill,BsBookHalf } from "react-icons/bs";
 import { FaUserDoctor } from "react-icons/fa6";
-import { FaClinicMedical } from "react-icons/fa";
+import { FaClinicMedical,FaRegCalendarAlt } from "react-icons/fa";
 import { MdHomeRepairService } from "react-icons/md";
 
 
@@ -44,7 +44,7 @@ const SideBar = () => {
           </li>
           <li>
             <NavLink to="/doctor/manage-schedule" className="active1">
-              <BsFillPeopleFill className="icon-sidebar"/>
+              <FaRegCalendarAlt className="icon-sidebar"/>
               <span>Quản lý lịch trình</span>
             </NavLink>
           </li>

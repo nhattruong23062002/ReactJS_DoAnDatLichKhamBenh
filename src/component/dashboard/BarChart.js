@@ -1,7 +1,7 @@
 import React from "react";
 import { CChart } from "@coreui/react-chartjs";
 
-const BarChart = ({ weekDays, revenueData }) => {
+const BarChart = ({ weekDays, totalBookingCurrentWeek }) => {
   // Code của thành phần BarChart ở đây
   // Đảm bảo rằng weekDays và revenueData có giá trị hợp lệ và không rỗng trước khi sử dụng.
 
@@ -13,9 +13,9 @@ const BarChart = ({ weekDays, revenueData }) => {
           labels: weekDays,
           datasets: [
             {
-              label: "Doanh thu",
+              label: "Lượt book",
               backgroundColor: "#f87979",
-              data: revenueData.map(dayData => dayData.totalRevenue), // Lấy totalRevenue từ mảng revenueData
+              data:totalBookingCurrentWeek && totalBookingCurrentWeek?.map(dayData => dayData.totalBooking), // Lấy totalRevenue từ mảng revenueData
             },
           ],
         }}

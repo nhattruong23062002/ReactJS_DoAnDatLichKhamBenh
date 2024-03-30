@@ -129,7 +129,7 @@ const ManageSchedule = () => {
 
   return (
     <div className="container">
-      <h2 className="doctor-title">Quản lý kế hoạch khám bệnh cho bác sĩ</h2>
+      <h3 className="doctor-title">Quản lý kế hoạch khám bệnh cho bác sĩ</h3>
       <div className="schedule-wrapTop ">
         {role && role === 'R1' ? (
         <>

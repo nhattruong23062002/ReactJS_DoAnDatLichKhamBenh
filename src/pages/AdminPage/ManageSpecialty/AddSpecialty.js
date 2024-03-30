@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as ReactDOM from "react-dom";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
@@ -6,6 +6,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import Select from "react-select";
 import axios from "axios";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
+import { useNavigate } from "react-router-dom";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 const AddSpecialty = () => {
@@ -14,6 +15,8 @@ const AddSpecialty = () => {
   const [nameSpecialty, setNameSpecialty] = useState("");
   const [tempAvatarFile, setTempAvatarFile] = useState(null);
   const [fileName, setFileName] = useState(null);
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
 
   const token = getTokenFromLocalStorage();
@@ -76,6 +79,7 @@ const AddSpecialty = () => {
         });
   
         alert("Thêm mới thành công");
+        navigate('/admin/specialty-manager')
         console.log("Response from server:", response.data);
       } else {
         console.error("fileName is not updated.");
@@ -86,7 +90,8 @@ const AddSpecialty = () => {
     }
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async(e) => {
+    e.preventDefault();
     handleUploadAvatar();
   };
 
@@ -96,13 +101,14 @@ const AddSpecialty = () => {
       setNameSpecialty('');
       setContentMarkdown('');
       setContentHTML('');
+      fileInputRef.current.value = '';
     }
   }, [fileName]);
 
 
   return (
     <>
-      <h2 className="doctor-title">Thêm Chuyên Khoa </h2>
+      <h3 className="doctor-title">Thêm Chuyên Khoa </h3>
       <form className="row" onSubmit={handleSubmit}>
         <div className="form-group col-md-6">
           <label className="control-label" >Tên chuyên khoa</label>
@@ -110,7 +116,7 @@ const AddSpecialty = () => {
         </div>
         <div className="form-group col-md-6">
           <label className="control-label">Ảnh chuyên khoa</label>
-          <input className="form-control" type="file" required accept="image/*" onChange={handleAvatarChange}/>
+          <input ref={fileInputRef}  className="form-control" type="file" required accept="image/*" onChange={handleAvatarChange}/>
         </div>
       <MdEditor
         style={{ height: "500px", marginTop: "20px" }}

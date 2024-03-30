@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "../../../styles/mainAdmin.css";
 import { FiPlusCircle } from "react-icons/fi";
 import { SearchOutlined } from "@ant-design/icons";
@@ -10,6 +10,7 @@ import axios from "axios";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import UpdateSpecialty from "./UpdateSpecialty";
+import ModalDelete from "../../../component/ModalDelete";
 
 const SpecialtyManager = () => {
   const [name, setName] = useState("");
@@ -18,6 +19,8 @@ const SpecialtyManager = () => {
   const searchInput = useRef(null);
   const [specialty, setSpecialty] = useState("");
   const [show, setShow] = useState(false);
+  const [idDelete, setIdDelete] = useState();
+
 
   const token = getTokenFromLocalStorage();
 
@@ -51,7 +54,7 @@ const SpecialtyManager = () => {
     clearFilters();
     setSearchText("");
   };
-  
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -186,36 +189,28 @@ const SpecialtyManager = () => {
       width: "20%",
       render: (text, record) => (
         <span>
-          <a>
+          <Link to={`/admin/specialty-manager/updateSpecialty/${record.id}`}>
             <PiPencilSimpleLineFill
               className="icon-update"
-              onClick={() => {
-                handleShow();
-                setName(record.name);
-              }}
             />
-            <UpdateSpecialty
-              show={show}
-              handleClose={handleClose}
-              name={name}
-              setName={setName}
-              handleSubmitUpdate={() => {
-                handleSubmitUpdate(record.id);
-              }}
+          </Link>
+          <a>
+            <MdDeleteForever className="icon-delete"  onClick={() =>  handleShow(record.id)}/>
+            <ModalDelete
+              isModalOpen={show}
+              handleOk={handleDelete}
+              handleCancel={handleCancel}
             />
-          </a>
-          <a onClick={() => handleDelete(record.id)}>
-            <MdDeleteForever className="icon-delete" />
           </a>
         </span>
       ),
     },
   ];
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3333/specialty/${id}`,
+        `http://localhost:3333/specialty/${idDelete}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -223,35 +218,17 @@ const SpecialtyManager = () => {
         }
       );
       getAllSpecialty();
-      alert("Đã xóa thành công");
+      setShow(false)
     } catch (error) {
       console.error("Error searching products:", error);
     }
   };
 
-  const handleSubmitUpdate = async (id) => {
-    try {
-      const response = await axios.patch(
-        `http://localhost:3333/specialty/${id}`,
-        {
-          name,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setShow(false);
-      getAllSpecialty();
-      console.log("Response from server:", response.data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleCancel = () => setShow(false);
+  const handleShow = (id) => {
+    setIdDelete(id)
+    setShow(true)
+  }
 
   return (
     <main className="app-content">

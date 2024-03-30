@@ -17,6 +17,12 @@ const HomePage = () => {
     navigate(`/specialty-search?name=${nameSpecialty}`);
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      navigate(`/specialty-search?name=${nameSpecialty}`);
+    }
+  }
+
   return (
     <>
       <div className="home-baner">
@@ -25,7 +31,7 @@ const HomePage = () => {
           <div className="title2">CHĂM SÓC SỨC KHỎE TOÀN DIỆN</div>
           <div className="search">
             <BsFillSearchHeartFill className="icon-search" onClick={handleClick}/>
-            <input type="text" placeholder="Tìm kiếm chuyên khoa khám bệnh" onChange={(e) => setNameSpecialty(e.target.value)}/>
+            <input type="text" placeholder="Tìm kiếm chuyên khoa khám bệnh" onChange={(e) => setNameSpecialty(e.target.value)} onKeyDown={handleKeyPress}/>
           </div>
         </div>
         <div className="home-baner-down">

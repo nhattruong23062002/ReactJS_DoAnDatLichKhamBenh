@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as ReactDOM from "react-dom";
 import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
@@ -6,6 +6,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import Select from "react-select";
 import axios from "axios";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
+import { useNavigate } from "react-router-dom";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 const AddClinic = () => {
@@ -15,6 +16,9 @@ const AddClinic = () => {
   const [addressClinic, setAddressClinic] = useState("");
   const [tempAvatarFile, setTempAvatarFile] = useState(null);
   const [fileName, setFileName] = useState(null);
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+
 
 
   const token = getTokenFromLocalStorage();
@@ -61,7 +65,7 @@ const AddClinic = () => {
     }
   };
 
-  const postSpecialty = async () => {
+  const postClinic = async () => {
     try {
       if (fileName) {
         const response = await axios.post("http://localhost:3333/clinic",    
@@ -78,6 +82,7 @@ const AddClinic = () => {
         });
   
         alert("Thêm mới thành công");
+        navigate('/admin/clinic-manager')
         console.log("Response from server:", response.data);
       } else {
         console.error("fileName is not updated.");
@@ -88,24 +93,26 @@ const AddClinic = () => {
     }
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async(e) => {
+    e.preventDefault();
     handleUploadAvatar();
   };
 
   useEffect(() => {
     if (fileName) {
-      postSpecialty();
+      postClinic();
       setNameClinic('');
       setContentMarkdown('');
       setContentHTML('');
       setAddressClinic('');
+      fileInputRef.current.value = '';
     }
   }, [fileName]);
 
 
   return (
     <>
-      <h2 className="doctor-title">Thêm Phòng Khám</h2>
+      <h3 className="doctor-title">Thêm Phòng Khám</h3>
       <form className="row" onSubmit={handleSubmit}>
         <div className="form-group col-md-6">
           <label className="control-label" >Tên phòng khám</label>
@@ -113,7 +120,7 @@ const AddClinic = () => {
         </div>
         <div className="form-group col-md-6">
           <label className="control-label">Ảnh phòng khám</label>
-          <input className="form-control" type="file" required accept="image/*" onChange={handleAvatarChange}/>
+          <input  ref={fileInputRef} className="form-control" type="file" required accept="image/*" onChange={handleAvatarChange}/>
         </div>
         <div className="form-group col-md-6">
           <label className="control-label" >Địa chỉ phòng khám</label>

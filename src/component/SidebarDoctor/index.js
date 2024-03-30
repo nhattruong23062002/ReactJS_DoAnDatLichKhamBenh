@@ -1,10 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { AiOutlineDashboard } from "react-icons/ai";
-import { BsFillPeopleFill,BsBookHalf } from "react-icons/bs";
-import { FaUserDoctor } from "react-icons/fa6";
-import { FaClinicMedical } from "react-icons/fa";
-import { MdHomeRepairService } from "react-icons/md";
+import { FaRegCalendarAlt } from "react-icons/fa";
 
 
 const SideBarDoctor = () => {
@@ -26,14 +23,8 @@ const SideBarDoctor = () => {
           </li>
           <li>
             <NavLink to="/doctor/manage-patient" className="active1">
-              <BsFillPeopleFill className="icon-sidebar"/>
+              <FaRegCalendarAlt className="icon-sidebar"/>
               <span>Quản lý lịch khám</span>
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/doctor" className="active1">
-              <FaUserDoctor className="icon-sidebar"/>
-              <span>Profile</span>
             </NavLink>
           </li>
         </ul>

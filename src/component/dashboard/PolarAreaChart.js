@@ -12,10 +12,10 @@ const PolarAreaChart = (props) => {
   }
 
   const chartData = {
-    labels: props.data.map((product) => product.name),
+    labels: props.data.map((e) => `${e.firstName} ${e.lastName}`),
     datasets: [
       {
-        data: props.data.map((product) => product.totalQuantity),
+        data: props.data.map((e) => e.bookingCount),
         backgroundColor: [
           "#FF6384",
           "#4BC0C0",

@@ -45,8 +45,8 @@ const Specialty = () => {
 
 
   return (
-    <div className="section specialty">
-      <div className="section-content container">
+    <div className="section specialty" style={{height:'450px'}}>
+      <div className="section-content container" style={{paddingTop:'80px'}}>
         <div className="section-header">
         <h2>Chuyên khoa phổ biến</h2>
         <button onClick={handleSpecialtyList}>Xem thêm</button>
