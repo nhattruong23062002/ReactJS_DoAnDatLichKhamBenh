@@ -1,0 +1,159 @@
+.section{
+    height: 380px;
+    border-bottom: 3px solid #ececec ;
+    .section-content{
+       padding: 10px 0px;
+       
+    }
+
+    .section-header{
+        padding: 30px 0px;
+        display: flex;
+        justify-content: space-between;
+
+        h2 {
+            font-size: 30px;
+        }
+
+        button{
+            font-size: 16px;
+            padding: 5px 10px;
+            border: none;
+            background-color: #e4e4e4;
+            &:hover{
+                background-color: #c9c9c9;
+                cursor: pointer;
+            }
+        }
+    }
+    
+    .slick-prev{
+        height: 48px;
+        width: 43px;
+        z-index: 1000;
+        background-color: #e0e0e0 !important;
+        color: #333;
+
+        &:hover{
+            background-color: #ffffff;
+        }
+    }
+    .slick-next{
+        height: 48px;
+        width: 43px;
+        background-color: #e0e0e0 !important;
+        
+        &:hover{
+            background-color: #ffffff;
+        }
+    }
+}
+.specialty{
+    margin-top: 100px;
+    background: #ffffff;
+    .section-item{
+        &:hover{
+            color: #49bce2;
+            cursor: pointer;
+        }
+        img{
+            width: 97%;
+            height: 175px;
+            text-align: center;
+        }
+        h3{
+            font-weight: 400;
+            font-size: 15px;
+        }
+      
+    }
+}
+.medical-facility{
+    background: #f5f5f5;
+    .section-item{
+        &:hover{
+            color: #49bce2;
+            cursor: pointer;
+        }
+
+        img{
+            width: 97%;
+            height: 160px;
+            text-align: center;
+        }
+        h3{
+            font-weight: 400;
+            font-size: 15px;
+        }
+      
+    }
+}
+.outstanding-doctor{
+    background: #ffffff;
+    height: 450px;
+    .section-item{
+        text-align: center;
+        cursor: pointer;
+        &:hover h3{
+            color: #49bce2;
+        }
+        .customize-border{
+            border: 1px solid #ccc;
+            padding: 10px 5px 0px 5px;
+            margin: 0px 5px;
+            height: 270px;
+            img{
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                margin: auto;
+            }
+            .info-doctor{
+                h3{
+                    margin-top: 10px;
+                    font-weight: 400;
+                    font-size: 15px;
+                }
+                p{
+                    font-weight: 350;
+                    font-size: 14px;
+                }
+            }
+        }
+      
+    }
+}
+.handbook{
+    height: 340px;
+    background: #f5f5f5;
+    .section-item{
+        &:hover{
+            color: #49bce2;
+            cursor: pointer;
+        }
+        .flex-handbook{
+            display: flex;
+            img{
+                flex: 1;
+                width: 100%;
+                height: 160px;
+                text-align: center;
+            }
+            h3{
+                flex: 1;
+                font-weight: 400;
+                font-size: 20px;
+                padding: 0px 10px;
+            }
+          
+        }
+
+    }
+}
+.css-1jqq78o-placeholder{
+    font-size: 16px;
+}
+
+.css-1dimb5e-singleValue{
+    font-size: 18px;
+}

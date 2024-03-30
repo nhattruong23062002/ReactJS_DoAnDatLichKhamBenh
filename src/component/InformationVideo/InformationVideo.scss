@@ -1,0 +1,24 @@
+.wrapper{
+    height: 500px;
+
+    h2{
+        margin: 50px 0px 30px 0px;
+    }
+    .wrapper-content{
+        display: flex;
+        
+        iframe{
+            flex: 1;
+        }
+        .logoTV{
+            flex: 1;
+            div{
+                padding: 0px 50px;
+            }
+            img{
+                height: 50px;
+                margin: 5px;
+            }
+        }
+    }
+}

@@ -1,0 +1,22 @@
+.infor-doctor{
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    .content-left{
+        img{
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+        }
+    }
+    .content-right{
+        margin-left: 20px;
+        padding-right: 400px;
+        h3{
+            font-size: 28px;
+        }
+        p{
+            font-size: 14px;
+        }
+    }
+}
