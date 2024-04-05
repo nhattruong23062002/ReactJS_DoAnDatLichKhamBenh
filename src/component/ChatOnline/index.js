@@ -22,7 +22,7 @@ const ChatOnline = () => {
   const sendMessageToOpenAI = async (message) => {
     try {
       const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
+        "",
         {
           method: "POST",
           headers: {
