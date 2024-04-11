@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Input } from "antd";
+import { Input, Pagination } from "antd";
 import { IoMdArrowRoundBack } from "react-icons/io";
-
+import BreadcrumbComponent from "../../../component/Breadcrumb";
 
 const ClinicList = () => {
   const [clinics, setClinics] = useState("");
   const [nameClinic, setNameClinic] = useState("");
-
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const getClinics = async () => {
       try {
-        const response = await axios.get(`http://localhost:3333/clinic?name=${nameClinic}`);
+        const response = await axios.get(
+          `http://localhost:3333/clinic?name=${nameClinic}`
+        );
         setClinics(response.data.payload);
       } catch (error) {
         console.error("Error searching products:", error);
@@ -28,31 +29,46 @@ const ClinicList = () => {
     navigate(`/detail-Clinic/${id}`);
   };
 
-  const handleClickBack = async (id) => {
-    navigate(`/`);
-  };
-
   return (
     <div className="specialty-list container">
       <div className="specialty-list-top">
-      <span className="icon-back" onClick={handleClickBack}><IoMdArrowRoundBack/></span>
+        <BreadcrumbComponent currentPage={"Danh sách phòng khám "} />
       </div>
       <div className="specialty-list-content">
         <div className="specialty-list-heading">
           <h4>Danh sách phòng khám</h4>
-          <Input className="input-search" placeholder="Tìm kiếm phòng khám" onChange={(e) => setNameClinic(e.target.value)}/>
+          <Input
+            className="input-search"
+            placeholder="Tìm kiếm phòng khám"
+            onChange={(e) => setNameClinic(e.target.value)}
+          />
         </div>
         {clinics &&
           clinics.map((item) => (
             <div
-              className="specialty-item"
+              className="clinic-item"
               key={item.id}
               onClick={() => handleClick(item.id)}
             >
-              <img src={`http://localhost:3333/${item.image}`} />
+              <div style={{ width: "220px", backgroundColor: "#fff" }}>
+                <img src={`http://localhost:3333/${item.image}`} />
+              </div>
               <p>{item.name}</p>
             </div>
           ))}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          paddingBottom: "20px",
+        }}
+      >
+        <Pagination
+          style={{ fontSize: "20px" }}
+          defaultCurrent={1}
+          total={50}
+        />
       </div>
     </div>
   );

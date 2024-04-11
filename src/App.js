@@ -32,8 +32,10 @@ import MainDashboardAdmin from "./pages/AdminPage/DashBoard/MainDashboardAdmin";
 import UpdateSpecialty from "./pages/AdminPage/ManageSpecialty/UpdateSpecialty";
 import UpdateClinic from "./pages/AdminPage/ManageClinic/UpdateClinic";
 import UpdateUser from "./pages/AdminPage/UserManager/UpdateUser";
+import History from "./pages/UserPage/History";
 
 function App() {
+  
   return (
     <div className="App">
       <Routes>
@@ -55,6 +57,7 @@ function App() {
           <Route path="/doctor-list" element={<DoctorList/>} />
           <Route path="/specialty-search" element={<SpecialtySearch/>} />
           <Route path="/profile" element={<Profile/>} />
+          <Route path="/history" element={<History/>} />
           <Route path="/changePassword" element={<ChangePassword/>} />
 
         </Route>

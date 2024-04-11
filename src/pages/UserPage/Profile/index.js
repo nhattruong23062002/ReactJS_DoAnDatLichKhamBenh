@@ -5,8 +5,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { getTokenFromLocalStorage } from "./../../../utils/tokenUtils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-
+import BreadcrumbComponent from "../../../component/Breadcrumb";
 
 const Profile = () => {
   const [userId, setUserId] = useState(null);
@@ -105,12 +104,13 @@ const Profile = () => {
   const handleSave = async (e) => {
     try {
       e.preventDefault();
-  
+
       const formData = new FormData();
       formData.append("file", tempAvatarFile);
-  
+
       // Upload avatar
-      const uploadAvatarResponse = await axios.post("http://localhost:3333/users/upload-single",
+      const uploadAvatarResponse = await axios.post(
+        "http://localhost:3333/users/upload-single",
         formData,
         {
           headers: {
@@ -119,12 +119,13 @@ const Profile = () => {
           },
         }
       );
-  
+
       // Extract the image URL from the response
       const uploadedImage = uploadAvatarResponse.data.payload.location;
 
       // Update profile with the new image URL
-      await axios.patch(`http://localhost:3333/users/${userId}`,
+      await axios.patch(
+        `http://localhost:3333/users/${userId}`,
         {
           newProfile,
           image: uploadedImage,
@@ -135,14 +136,14 @@ const Profile = () => {
           },
         }
       );
-  
+
       // Update local profile state with the new image URL
       setProfile((prevState) => ({
         ...prevState,
         ...newProfile,
         image: uploadedImage,
       }));
-  
+
       alert("Bạn đã cập nhật thông tin thành công");
       return uploadedImage; // Return the uploaded image URL
     } catch (error) {
@@ -152,17 +153,11 @@ const Profile = () => {
     }
   };
 
-  const handleClickBack = async () => {
-    navigate(`/`);
-  };
-  
 
   return (
     <div className="container">
       <div className="specialty-list-top">
-        <span className="icon-back"  onClick={handleClickBack}>
-          <IoMdArrowRoundBack />
-        </span>
+        <BreadcrumbComponent currentPage={`Thông tin cá nhân`} />
       </div>
       <div className="specialty-list-content">
         <div

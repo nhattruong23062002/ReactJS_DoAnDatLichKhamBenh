@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Input } from "antd";
+import { Input, Pagination } from "antd";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import BreadcrumbComponent from "../../../component/Breadcrumb";
 
 const DoctorList = () => {
   const [doctors, setDoctors] = useState("");
@@ -29,16 +30,10 @@ const DoctorList = () => {
     navigate(`/detail-doctor/${id}`);
   };
 
-  const handleClickBack = async (id) => {
-    navigate(`/`);
-  };
-
   return (
     <div className="doctor-list container">
       <div className="doctor-list-top">
-        <span className="icon-back" onClick={handleClickBack}>
-          <IoMdArrowRoundBack />
-        </span>
+        <BreadcrumbComponent currentPage={"Danh sách bác sĩ "} />
       </div>
       <div className="doctor-list-content">
         <div className="doctor-list-heading">
@@ -65,6 +60,19 @@ const DoctorList = () => {
               </div>
             </div>
           ))}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          paddingBottom: "20px",
+        }}
+      >
+        <Pagination
+          style={{ fontSize: "20px" }}
+          defaultCurrent={1}
+          total={50}
+        />
       </div>
     </div>
   );

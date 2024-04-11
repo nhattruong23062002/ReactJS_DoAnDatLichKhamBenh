@@ -19,7 +19,6 @@ const DetailClinic = () => {
     }
   };
 
-  console.log('««««« detailClinic »»»»»', detailClinic);
 
   useEffect(() => {
     getDetailSpecialty();
@@ -27,8 +26,8 @@ const DetailClinic = () => {
 
   useEffect(() => {
     const getDoctors = async () => {
-      if (detailClinic.doctorSpecialty) {
-        const doctorIds = detailClinic.doctorSpecialty.map((item) => {
+      if (detailClinic.doctorClinic) {
+        const doctorIds = detailClinic.doctorClinic.map((item) => {
           return item.doctorId;
         });
         try {
@@ -45,8 +44,7 @@ const DetailClinic = () => {
           console.error("Error searching doctors:", error);
         }
       } else {
-        console.error("detailSpecialty.doctorSpecialty is undefined");
-        // Thực hiện xử lý hoặc thông báo lỗi ở đây nếu cần.
+        console.error("detailSpecialty.doctorClinic is undefined");
       }
     };
     getDoctors();

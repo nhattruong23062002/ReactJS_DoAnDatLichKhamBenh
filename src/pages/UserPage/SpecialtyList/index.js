@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { Pagination } from "antd";
+import BreadcrumbComponent from "../../../component/Breadcrumb";
 
 const SpecialtyList = () => {
   const [specialtys, setSpecialtys] = useState("");
@@ -26,16 +28,10 @@ const SpecialtyList = () => {
     navigate(`/detail-specialty/${id}`);
   };
 
-  const handleClickBack = async (id) => {
-    navigate(`/`);
-  };
-
   return (
     <div className="specialty-list container">
       <div className="specialty-list-top">
-        <span className="icon-back" onClick={handleClickBack}>
-          <IoMdArrowRoundBack />
-        </span>
+      <BreadcrumbComponent currentPage = {'Danh sách chuyên khoa '}/>
       </div>
       <div className="specialty-list-content">
         <h4 style={{ marginTop: "10px" }}>Danh sách chuyên khoa khám bệnh</h4>
@@ -46,10 +42,25 @@ const SpecialtyList = () => {
               key={item.id}
               onClick={() => handleClick(item.id)}
             >
-              <img src={`http://localhost:3333/${item.image}`} />
+              <div style={{ width: "220px",height:'120px', backgroundColor: "#fff" }}>
+                <img src={`http://localhost:3333/${item.image}`} />
+              </div>
               <p>{item.name}</p>
             </div>
           ))}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          paddingBottom: "20px",
+        }}
+      >
+        <Pagination
+          style={{ fontSize: "20px" }}
+          defaultCurrent={1}
+          total={50}
+        />
       </div>
     </div>
   );

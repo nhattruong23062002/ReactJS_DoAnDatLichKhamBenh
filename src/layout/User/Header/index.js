@@ -3,14 +3,18 @@ import { FiMenu } from "react-icons/fi";
 import { AiFillQuestionCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
-import { getTokenFromLocalStorage, removeTokenFromLocalStorage } from "../../../utils/tokenUtils";
+import {
+  getTokenFromLocalStorage,
+  removeTokenFromLocalStorage,
+} from "../../../utils/tokenUtils";
 import axios from "axios";
-
+import { Input, QRCode, Space } from "antd";
 
 const Header = () => {
   const [role, setRole] = useState("");
   const [id, setId] = useState("");
   const [doctor, setDoctor] = useState("");
+  const [isCheck, setIsCheck] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,19 +33,23 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-      const getDoctor = async () => {
-        try {
-          const response = await axios.get(`http://localhost:3333/users/${id}`);
-          setDoctor(response.data.payload);
-        } catch (error) {
-          console.error("Error searching products:", error);
-        }
-      };
-      getDoctor();
+    const getDoctor = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3333/users/${id}`);
+        setDoctor(response.data.payload);
+      } catch (error) {
+        console.error("Error searching products:", error);
+      }
+    };
+    getDoctor();
   }, [id]);
 
   const handleLogin = async () => {
     navigate("/login");
+  };
+
+  const handleShowHistory = async () => {
+    navigate("/history");
   };
 
   const handleChangePassword = async () => {
@@ -53,7 +61,7 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    if (role === 'R3') {
+    if (role === "R3") {
       removeTokenFromLocalStorage();
       window.location.reload();
     }
@@ -61,7 +69,8 @@ const Header = () => {
 
   const handleImageError = (event) => {
     // Thay đổi nguồn ảnh khi xảy ra lỗi
-    event.target.src = 'https://banner2.cleanpng.com/20180514/gre/kisspng-computer-icons-avatar-user-profile-clip-art-5af95fab3b2d13.0220186015262923952424.jpg';
+    event.target.src =
+      "https://banner2.cleanpng.com/20180514/gre/kisspng-computer-icons-avatar-user-profile-clip-art-5af95fab3b2d13.0220186015262923952424.jpg";
   };
 
   return (
@@ -69,8 +78,8 @@ const Header = () => {
       <div className="home-header-content container">
         <div className="left-content">
           {/* <FiMenu className="menu-homepage" /> */}
-          <div className="header-logo" onClick={() => navigate('/')}>
-            <img src="https://png.pngtree.com/png-clipart/20230823/original/pngtree-medical-logo-template-vector-illustration-picture-image_8251825.png"/>
+          <div className="header-logo" onClick={() => navigate("/")}>
+            <img src="https://png.pngtree.com/png-clipart/20230823/original/pngtree-medical-logo-template-vector-illustration-picture-image_8251825.png" />
           </div>
         </div>
         <div className="center-content">
@@ -100,30 +109,38 @@ const Header = () => {
           </div>
         </div>
         <div className="right-content">
-          <div className="support">
+          <div className="support" onClick={() => setIsCheck(!isCheck)}>
             <AiFillQuestionCircle style={{ marginRight: "5px" }} />
             Hỗ trợ
+          {isCheck && (
+            <div className="QRcode">
+              <Space direction="vertical" align="center">
+                <QRCode value={"0353639495"}/>
+              </Space>
+            </div>
+          )}
           </div>
           {role === "R3" ? (
             <div className="has-dropdown">
-                <img className="avatar" src={`http://localhost:3333/${doctor.image}`} onError={handleImageError} />
-                <ul className="sub-menu">
-                    <li>
-                      <p onClick={handleDirect}>
-                        Tài khoản của tôi
-                      </p>
-                    </li>
-                    <li>
-                      <p onClick={handleChangePassword}>
-                        Đổi mật khẩu
-                      </p>
-                    </li>
-                    <li>
-                      <p onClick={handleLogout}>
-                        Đăng xuất
-                      </p>
-                    </li>
-                  </ul>
+              <img
+                className="avatar"
+                src={`http://localhost:3333/${doctor.image}`}
+                onError={handleImageError}
+              />
+              <ul className="sub-menu">
+                <li>
+                  <p onClick={handleDirect}>Tài khoản của tôi</p>
+                </li>
+                <li>
+                  <p onClick={handleChangePassword}>Đổi mật khẩu</p>
+                </li>
+                <li>
+                  <p onClick={handleShowHistory}>Lịch hẹn đã đặt</p>
+                </li>
+                <li>
+                  <p onClick={handleLogout}>Đăng xuất</p>
+                </li>
+              </ul>
             </div>
           ) : (
             <div className="language-vi" onClick={handleLogin}>

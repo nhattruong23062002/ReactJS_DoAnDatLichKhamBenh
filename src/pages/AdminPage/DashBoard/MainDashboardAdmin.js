@@ -92,7 +92,6 @@ const MainDashboardAdmin = () => {
       console.error("Error:", error);
     }
   };
-  console.log('««««« totalBookingCurrentWeek »»»»»', totalBookingCurrentWeek);
 
   useEffect(() => {
     getAllDoctor();

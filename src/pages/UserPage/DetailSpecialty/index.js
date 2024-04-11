@@ -5,6 +5,7 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import DoctorInfor from "../../../component/DoctorInfor";
 import Select from "react-select";
+import BreadcrumbComponent from "../../../component/Breadcrumb";
 
 const DetailSpecialty = () => {
   const [doctor, setDoctor] = useState("");
@@ -15,7 +16,10 @@ const DetailSpecialty = () => {
   const [showMore, setShowMore] = useState(false);
 
   const { descriptionMarkdown } = detailSpecialty;
-  const lines = descriptionMarkdown && typeof descriptionMarkdown === 'string' ? descriptionMarkdown.split('\n') : [];
+  const lines =
+    descriptionMarkdown && typeof descriptionMarkdown === "string"
+      ? descriptionMarkdown.split("\n")
+      : [];
   const visibleContent = showMore ? lines : lines.slice(0, 8);
 
   const toggleShowMore = () => {
@@ -53,21 +57,21 @@ const DetailSpecialty = () => {
   const dataProvince = BuildDataInputSelect(province);
 
   const getDetailSpecialty = async () => {
-    let dataProvince
-    if(selectedProvince){
-        dataProvince = selectedProvince.value 
-    }else{
-        dataProvince = "ALL"
+    let dataProvince;
+    if (selectedProvince) {
+      dataProvince = selectedProvince.value;
+    } else {
+      dataProvince = "ALL";
     }
-      try {
-        const response = await axios.get(
-          `http://localhost:3333/specialty/${id}?location=${dataProvince}`
-        );
-        setDetailSpecialty(response.data.payload);
-      } catch (error) {
-        console.error("Error searching products:", error);
-      }
-    };
+    try {
+      const response = await axios.get(
+        `http://localhost:3333/specialty/${id}?location=${dataProvince}`
+      );
+      setDetailSpecialty(response.data.payload);
+    } catch (error) {
+      console.error("Error searching products:", error);
+    }
+  };
 
   useEffect(() => {
     getDetailSpecialty();
@@ -103,33 +107,42 @@ const DetailSpecialty = () => {
     };
     getDoctors();
   }, [detailSpecialty]);
+
   return (
     <div className="detail-specialty-container">
       <div className="detail-specialty-top">
-      <div className="description-specialty container">
-      <div dangerouslySetInnerHTML={{ __html: visibleContent.join('') }}></div>
-      {lines.length > 3 && (
-        <p className="btn-showmore" onClick={toggleShowMore}>
-          {showMore ? 'Ẩn đi' : 'Đọc thêm'}
-        </p>
-      )}
-      </div>
+        <div className="description-specialty container">
+          <BreadcrumbComponent currentPage={detailSpecialty.name} />
+          <div
+            dangerouslySetInnerHTML={{ __html: visibleContent.join("") }}
+          ></div>
+          {lines.length > 3 && (
+            <p className="btn-showmore" onClick={toggleShowMore}>
+              {showMore ? "Ẩn đi" : "Đọc thêm"}
+            </p>
+          )}
+        </div>
       </div>
       <div className="each-doctor">
-        <div className="container" style={{padding:"0px"}}>
-        <Select
-          onChange={setSelectedProvince}
-          options={dataProvince}
-          placeholder={"Chọn tỉnh thành"}
-          className="select-province"
-        />
+        <div className="container" style={{ padding: "0px" }}>
+          <Select
+            onChange={setSelectedProvince}
+            options={dataProvince}
+            placeholder={"Chọn tỉnh thành"}
+            className="select-province"
+          />
         </div>
         {doctor &&
           doctor.map((doctorInfo) => (
             <div className="wrap-doctor-infor container" key={doctorInfo.id}>
               <div className="content-left-doctor">
                 <DoctorInfor doctor={doctorInfo} />
-                <Link className="more-detail-doctor" to={`/detail-doctor/${doctorInfo.id}`}>Xem thêm</Link>
+                <Link
+                  className="more-detail-doctor"
+                  to={`/detail-doctor/${doctorInfo.id}`}
+                >
+                  Xem thêm
+                </Link>
               </div>
               <div className="content-right-doctor">
                 <DoctorSchedule doctorId={doctorInfo.id} />
