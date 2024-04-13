@@ -75,6 +75,7 @@ const DetailSpecialty = () => {
 
   useEffect(() => {
     getDetailSpecialty();
+    window.scrollTo(0, 0); 
   }, []);
 
   useEffect(() => {

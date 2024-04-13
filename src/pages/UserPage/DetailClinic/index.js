@@ -19,7 +19,6 @@ const DetailClinic = () => {
     }
   };
 
-
   useEffect(() => {
     getDetailSpecialty();
   }, []);
@@ -54,7 +53,7 @@ const DetailClinic = () => {
       <div className="detail-clinic-background">
         <img src="https://saobacdautelecom.vn/wp-content/uploads/2021/08/Be%CC%A3%CC%82nh-vie%CC%A3%CC%82n-Pho%CC%80ng-kha%CC%81m_1920x772-e1633608427676.png" />
         <div className="wrap-clinic-infor container">
-          <img src= {`http://localhost:3333/${detailClinic.image}`} />
+          <img src={`http://localhost:3333/${detailClinic.image}`} />
           <div className="wrap-clinic-name">
             <h3>{detailClinic.name}</h3>
             <p>{detailClinic.address}</p>
@@ -62,20 +61,27 @@ const DetailClinic = () => {
         </div>
       </div>
       {doctor &&
-          doctor.map((doctorInfo) => (
-            <div className="wrap-doctor-infor container" key={doctorInfo.id}>
-              <div className="content-left-doctor">
-                <DoctorInfor doctor={doctorInfo} />
-                <Link className="more-detail-doctor" to={`/detail-doctor/${doctorInfo.id}`}>Xem thêm</Link>
-              </div>
-              <div className="content-right-doctor">
-                <DoctorSchedule doctorId={doctorInfo.id} />
-                <DoctorExtraInfor doctor={doctorInfo} />
-              </div>
+        doctor.map((doctorInfo) => (
+          <div className="wrap-doctor-infor container" key={doctorInfo.id}>
+            <div className="content-left-doctor">
+              <DoctorInfor doctor={doctorInfo} />
+              <Link
+                className="more-detail-doctor"
+                to={`/detail-doctor/${doctorInfo.id}`}
+              >
+                Xem thêm
+              </Link>
             </div>
+            <div className="content-right-doctor">
+              <DoctorSchedule doctorId={doctorInfo.id} />
+              <DoctorExtraInfor doctor={doctorInfo} />
+            </div>
+          </div>
         ))}
       <div className="wrap-description-clinic container">
-        <div dangerouslySetInnerHTML={{__html:detailClinic.descriptionMarkdown}}></div>
+        <div
+          dangerouslySetInnerHTML={{ __html: detailClinic.descriptionMarkdown }}
+        ></div>
       </div>
     </div>
   );

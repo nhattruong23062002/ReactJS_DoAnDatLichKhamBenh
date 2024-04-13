@@ -61,7 +61,7 @@ const SideBar = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/" className="active1">
+            <NavLink to="/admin/handbook-manager" className="active1">
               <BsBookHalf className="icon-sidebar"/>
               <span>Cẩm nang</span>
             </NavLink>

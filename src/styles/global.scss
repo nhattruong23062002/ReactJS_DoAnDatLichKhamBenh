@@ -700,6 +700,89 @@
 
 }
 
+/* Handbook */
+.detail-handbook-container{
+  min-height: 750px;
+  .detail-handbook-background{
+      height: 300px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      img{
+          height: 300px;
+          width: 100%;
+      }
+      div{
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: absolute;
+        text-align: center;
+        align-items: center;
+        span{
+          margin-bottom: 5px;
+        }   
+        h3{
+        font-family: 'Poppins', sans-serif;
+        /* color: #fff; */
+        }
+      }
+  }
+  .wrap-description-handbook {
+    margin-top: 20px;
+    display: flex;
+    .wrapper-handbook-content{
+      padding: 20px;
+      background-color: #fff;
+      flex: 2;
+      border-radius: 3px;
+      img{
+        width: 100%;
+      }
+
+      p{
+        font-family: 'Poppins', sans-serif;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      
+      th, td {
+        border: 1px solid #ddd; 
+        padding: 8px; 
+        text-align: left; 
+      }
+      
+      th {
+        background-color: #f2f2f2; 
+      }
+    }
+    .wrapper-handbook-keyword{
+      flex: 1;
+      .wrapper-keyword{
+        padding: 10px;
+        background-color: #fff;
+        margin-left: 20px;
+        border-radius: 3px;
+        h4{
+          border-bottom: 5px solid #eea60c;
+          padding-bottom: 5px;
+        }
+        p{
+          margin-bottom: 8px;
+        }
+        li{
+          margin-top: 5px;
+        }
+
+      }
+    }
+  }
+}
+
 /*Profile */
 .profile-container{
     display: flex;
