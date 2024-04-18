@@ -3,6 +3,7 @@ import axios from "axios";
 import { useLocation ,useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
+import { BASE_URL } from "../../../utils/apiConfig";
 
 
 const SpecialtySearch = () => {
@@ -16,7 +17,7 @@ const SpecialtySearch = () => {
   useEffect(() => {
     const getSpecialty = async () => {
       try {
-        const response = await axios.get(`http://localhost:3333/specialty?name=${name}`);
+        const response = await axios.get(`${BASE_URL}/specialty?name=${name}`);
         setSpecialty(response.data.payload);
       } catch (error) {
         console.error("Error searching products:", error);
@@ -45,7 +46,7 @@ const SpecialtySearch = () => {
               key={item.id}
               onClick={() => handleClick(item.id)}
             >
-              <img src={`http://localhost:3333/${item.image}`} />
+              <img src={`${BASE_URL}/${item.image}`} />
               <p>{item.name}</p>
             </div>
           ))}

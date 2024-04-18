@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from "./../../utils/apiConfig";
 
 const Specialty = () => {
   const [specialty, setSpecialty] = useState("");
@@ -14,7 +15,7 @@ const Specialty = () => {
     const getAllUser = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3333/specialty?name="
+          `${BASE_URL}/specialty?name=`
         );
         setSpecialty(response.data.payload);
         console.log('««««« response.data.payload »»»»»', response.data.payload);
@@ -24,6 +25,7 @@ const Specialty = () => {
     };
     getAllUser();
   }, []);
+  console.log('««««« BASE_URL »»»»»', BASE_URL);
 
 
   var settings = {
@@ -54,7 +56,7 @@ const Specialty = () => {
         <Slider {...settings}>
         {specialty && specialty.map((p) => (
           <div className="section-item"  key={p.id} onClick={() => handleSpecialtyDetail(p.id)}>
-            <img src={`http://localhost:3333/${p.image}`}/>
+            <img src={`${BASE_URL}/${p.image}`}/>
             <h3>{p.name}</h3>
           </div>
           ))}

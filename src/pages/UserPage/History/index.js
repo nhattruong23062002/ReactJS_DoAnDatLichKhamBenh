@@ -8,6 +8,8 @@ import { getIdUser } from "../../../utils/tokenUtils";
 import { MdNewReleases } from "react-icons/md";
 import moment from "moment";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const History = () => {
   const [patient, setPatient] = useState("");
@@ -23,7 +25,7 @@ const History = () => {
   const getPatient = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/users/${IdPatient}`
+        `${BASE_URL}/users/${IdPatient}`
       );
       setPatient(response.data.payload);
     } catch (error) {
@@ -34,7 +36,7 @@ const History = () => {
   const getHistoryBooking = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/booking/history-booking?patientId=${IdPatient}`
+        `${BASE_URL}/booking/history-booking?patientId=${IdPatient}`
       );
       setAllHistoryBooking(response.data.payload);
     } catch (error) {

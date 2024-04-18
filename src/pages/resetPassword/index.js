@@ -4,6 +4,8 @@ import styles from "./resetPassword.module.css"
 import axios from "axios";
 import {useNavigate} from 'react-router-dom';
 import queryString from 'query-string';
+import { BASE_URL } from "./../../utils/apiConfig";
+
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -18,9 +20,6 @@ const ResetPassword = () => {
     setToken(urlToken);
   }, []);
 
-  
-  console.log('««««« token »»»»»', token);
-  console.log('««««« password »»»»»', password);
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
@@ -31,7 +30,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:3333/users/resetPassword`, { password ,token});
+      const response = await axios.post(`${BASE_URL}/users/resetPassword`, { password ,token});
       console.log("Response from Backend:", response);
       alert("Mật khẩu đã được đặt lại thành công.");
       navigate('/login');

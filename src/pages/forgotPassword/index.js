@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import styles from "../forgotPassword/forgotPassword.module.css";
 import { TbLock } from "react-icons/tb";
 import axios from "axios";
+import { BASE_URL } from "./../../utils/apiConfig";
+
 
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  console.log('««««« email »»»»»', email);
 
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3333/users/forgotPassword", {
+      const response = await axios.post(`${BASE_URL}/users/forgotPassword`, {
         email
       });
       alert(response.data.message );

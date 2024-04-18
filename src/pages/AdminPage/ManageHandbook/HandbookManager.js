@@ -10,6 +10,8 @@ import axios from "axios";
 import { PiPencilSimpleLineFill } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import ModalDelete from "../../../component/ModalDelete";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const HandbookManager = () => {
   const [searchText, setSearchText] = useState("");
@@ -25,7 +27,7 @@ const HandbookManager = () => {
   const getAllHandbook = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/handbook",
+        `${BASE_URL}/handbook`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -172,7 +174,7 @@ const HandbookManager = () => {
         <div>
           {record && record.image ? (
             <img
-              src={`http://localhost:3333/${record.image}`}
+              src={`${BASE_URL}/${record.image}`}
               alt="error"
               style={{ width: "100px" }}
             />
@@ -209,7 +211,7 @@ const HandbookManager = () => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3333/handbook/${idDelete}`,
+        `${BASE_URL}/handbook/${idDelete}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

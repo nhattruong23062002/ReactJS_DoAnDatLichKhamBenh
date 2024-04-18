@@ -11,6 +11,8 @@ import { PiPencilSimpleLineFill } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import UpdateSpecialty from "./UpdateSpecialty";
 import ModalDelete from "../../../component/ModalDelete";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const SpecialtyManager = () => {
   const [name, setName] = useState("");
@@ -27,7 +29,7 @@ const SpecialtyManager = () => {
   const getAllSpecialty = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/specialty?name=",
+        `${BASE_URL}/specialty?name=`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -173,7 +175,7 @@ const SpecialtyManager = () => {
         <div>
           {record && record.image ? (
             <img
-              src={`http://localhost:3333/${record.image}`}
+              src={`${BASE_URL}/${record.image}`}
               alt="error"
               style={{ width: "100px" }}
             />
@@ -210,7 +212,7 @@ const SpecialtyManager = () => {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3333/specialty/${idDelete}`,
+        `${BASE_URL}/specialty/${idDelete}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

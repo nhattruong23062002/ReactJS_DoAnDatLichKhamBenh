@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from "./../../utils/apiConfig";
 
 const MedicalFacility = () => {
   const [clinic, setClinic] = useState("");
@@ -14,7 +15,7 @@ const MedicalFacility = () => {
     const getAllClinic = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3333/clinic?name="
+          `${BASE_URL}/clinic?name=`
         );
         setClinic(response.data.payload);
       } catch (error) {
@@ -51,7 +52,7 @@ const MedicalFacility = () => {
         <Slider {...settings}>
         {clinic && clinic.map((c) => (
            <div className="section-item " key={c.id} onClick={() => handleClinicDetail(c.id)}>
-           <img src={`http://localhost:3333/${c.image}`}/>
+           <img src={`${BASE_URL}/${c.image}`}/>
            <h3>{c.name}</h3>
          </div>
         ))}

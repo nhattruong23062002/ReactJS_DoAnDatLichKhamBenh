@@ -7,6 +7,8 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
 import { getTokenFromLocalStorage } from "../../utils/tokenUtils";
+import { BASE_URL } from "./../../utils/apiConfig";
+
 
 
 const DoctorSchedule = (id) => {
@@ -51,7 +53,7 @@ const DoctorSchedule = (id) => {
   console.log('««««« arrDate »»»»»', arrDate);
   const handleScheduleToday = async () => {
     try {
-      const response = await axios.get(`http://localhost:3333/schedule?doctorId=${id.doctorId}&date=${arrDate[0].value}`);
+      const response = await axios.get(`${BASE_URL}/schedule?doctorId=${id.doctorId}&date=${arrDate[0].value}`);
       setTimeSchedule(response.data.payload);
     } catch (error) {
     console.error("Error", error);
@@ -66,7 +68,7 @@ const DoctorSchedule = (id) => {
     try {
       let date = event.target.value;
       console.log('««««« date »»»»»', date);
-      const response = await axios.get(`http://localhost:3333/schedule?doctorId=${id.doctorId}&date=${date}`);
+      const response = await axios.get(`${BASE_URL}/schedule?doctorId=${id.doctorId}&date=${date}`);
       setTimeSchedule(response.data.payload);
       console.log('««««« response.data.payload »»»»»', response.data.payload);
     } catch (error) {

@@ -7,6 +7,7 @@ import Select from "react-select";
 import axios from "axios";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import { useNavigate, useParams } from "react-router-dom";
+import { BASE_URL } from "../../../utils/apiConfig";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 const UpdateSpecialty = () => {
@@ -24,7 +25,7 @@ const UpdateSpecialty = () => {
   const getSpecialtyDetail = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/specialty/${id}?location=`,
+        `${BASE_URL}/specialty/${id}?location=`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -70,7 +71,7 @@ const UpdateSpecialty = () => {
       try {
         if(typeof tempAvatarFile === 'object'){
           const response = await axios.post(
-            "http://localhost:3333/users/upload-single",
+            `${BASE_URL}/users/upload-single`,
             formData,
             {
               headers: {
@@ -94,7 +95,7 @@ const UpdateSpecialty = () => {
     try {
       if (fileName) {
         const response = await axios.patch(
-          `http://localhost:3333/specialty/${id}`,
+          `${BASE_URL}/specialty/${id}`,
           {
             name: nameSpecialty,
             descriptionHTML: contentHTML,

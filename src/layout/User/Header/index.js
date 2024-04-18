@@ -9,6 +9,8 @@ import {
 } from "../../../utils/tokenUtils";
 import axios from "axios";
 import { Input, QRCode, Space } from "antd";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const Header = () => {
   const [role, setRole] = useState("");
@@ -35,7 +37,7 @@ const Header = () => {
   useEffect(() => {
     const getDoctor = async () => {
       try {
-        const response = await axios.get(`http://localhost:3333/users/${id}`);
+        const response = await axios.get(`${BASE_URL}/users/${id}`);
         setDoctor(response.data.payload);
       } catch (error) {
         console.error("Error searching products:", error);
@@ -124,7 +126,7 @@ const Header = () => {
             <div className="has-dropdown">
               <img
                 className="avatar"
-                src={`http://localhost:3333/${doctor.image}`}
+                src={`${BASE_URL}/${doctor.image}`}
                 onError={handleImageError}
               />
               <ul className="sub-menu">

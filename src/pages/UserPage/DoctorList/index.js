@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Input, Pagination } from "antd";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const DoctorList = () => {
   const [doctors, setDoctors] = useState("");
@@ -15,7 +17,7 @@ const DoctorList = () => {
     const getDoctors = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3333/users/getall-doctor?name=${nameDoctor}`
+          `${BASE_URL}/users/getall-doctor?name=${nameDoctor}`
         );
         setDoctors(response.data.payload);
         console.log("««««« response.data.payload »»»»»", response.data.payload);
@@ -51,7 +53,7 @@ const DoctorList = () => {
               key={item.id}
               onClick={() => handleClick(item.id)}
             >
-              <img src={`http://localhost:3333/${item.image}`} />
+              <img src={`${BASE_URL}/${item.image}`} />
               <div>
                 <p>
                   {item.positionData.valueVi} {item.firstName} {item.lastName}

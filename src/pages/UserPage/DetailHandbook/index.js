@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import cheerio from "cheerio";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const DetailHandbook = () => {
   const [detailHandbook, setDetailHandbook] = useState("");
@@ -9,7 +11,7 @@ const DetailHandbook = () => {
 
   const getDetailHandbook = async () => {
     try {
-      const response = await axios.get(`http://localhost:3333/handbook/${id}`);
+      const response = await axios.get(`${BASE_URL}/handbook/${id}`);
       setDetailHandbook(response.data.payload);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -64,7 +66,7 @@ const DetailHandbook = () => {
 
       <div className="wrap-description-handbook container">
         <div className="wrapper-handbook-content">
-          <img src={`http://localhost:3333/${detailHandbook.image}`} />
+          <img src={`${BASE_URL}/${detailHandbook.image}`} />
           <div
             dangerouslySetInnerHTML={{
               __html: detailHandbook.descriptionMarkdown,

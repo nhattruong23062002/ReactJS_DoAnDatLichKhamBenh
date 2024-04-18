@@ -7,6 +7,7 @@ import Select from "react-select";
 import axios from "axios";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import { useNavigate, useParams } from "react-router-dom";
+import { BASE_URL } from "../../../utils/apiConfig";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 const UpdateClinic = () => {
@@ -24,7 +25,7 @@ const UpdateClinic = () => {
 
   const getClinicDetail = async () => {
     try {
-      const response = await axios.get(`http://localhost:3333/clinic/${id}`, {
+      const response = await axios.get(`${BASE_URL}/clinic/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,7 +70,7 @@ const UpdateClinic = () => {
       try {
         if (typeof tempAvatarFile === "object") {
           const response = await axios.post(
-            "http://localhost:3333/users/upload-single",
+            `${BASE_URL}/users/upload-single`,
             formData,
             {
               headers: {
@@ -93,7 +94,7 @@ const UpdateClinic = () => {
     try {
       if (fileName) {
         const response = await axios.patch(
-          `http://localhost:3333/clinic/${id}`,
+          `${BASE_URL}/clinic/${id}`,
           {
             name: nameClinic,
             descriptionHTML: contentHTML,

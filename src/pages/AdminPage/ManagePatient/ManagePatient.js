@@ -8,7 +8,9 @@ import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import jwt_decode from "jwt-decode";
 import { Table } from "antd";
 
+
 import "../../../styles/mainAdmin.css";
+import { BASE_URL } from "../../../utils/apiConfig";
 
 const ManagePatient = () => {
   const [booking, setBooking] = useState("");
@@ -84,7 +86,7 @@ const ManagePatient = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:3333/users/upload-single",
+          `${BASE_URL}/users/upload-single`,
           formData,
           {
             headers: {
@@ -106,7 +108,7 @@ const ManagePatient = () => {
   const handleSend = async (rowData) => {
     try {
         const response = await axios.patch(
-          `http://localhost:3333/booking/${rowData.id}`,
+          `${BASE_URL}/booking/${rowData.id}`,
           {
             statusId: "S3",
             fileName,
@@ -146,7 +148,7 @@ const ManagePatient = () => {
       startDate.setHours(0, 0, 0, 0);
       const formattedStartDate = new Date(startDate).getTime();
       const response = await axios.get(
-        `http://localhost:3333/booking?doctorId=${doctorId}&date=${formattedStartDate}&status=${activeItem}`
+        `${BASE_URL}/booking?doctorId=${doctorId}&date=${formattedStartDate}&status=${activeItem}`
       );
       setBooking(response.data.payload);
       setScheduleId(response.data.payload[0].scheduleId)
@@ -167,7 +169,7 @@ const ManagePatient = () => {
   const handleCancelBooking = async (rowData) => {
     try {
       const response = await axios.patch(
-        `http://localhost:3333/booking/${rowData.id}`,
+        `${BASE_URL}/booking/${rowData.id}`,
         {
           statusId: "S4",
         }
@@ -183,7 +185,7 @@ const ManagePatient = () => {
     const getSchedule = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3333/schedule/${scheduleId}`
+          `${BASE_URL}/schedule/${scheduleId}`
         );
         setSchedule(response.data.payload);
       } catch (error) {

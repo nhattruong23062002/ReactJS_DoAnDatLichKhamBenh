@@ -5,6 +5,8 @@ import styles from "./ChangePassword.module.css";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 
 const ChangePassword = () => {
@@ -36,7 +38,7 @@ const ChangePassword = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3333/users/changePassword/${token}`,
+        `${BASE_URL}/users/changePassword/${token}`,
         { newPassword, currentPassword }
       );
       console.log("Response from Backend:", response.data);

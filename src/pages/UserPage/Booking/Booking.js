@@ -7,6 +7,8 @@ import { getTokenFromLocalStorage,getIdUser } from "../../../utils/tokenUtils";
 import UpdateUser from "../../AdminPage/UserManager/UpdateUser";
 import ChangeInfor from "./ChangeInfor";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 
 const Booking = () => {
@@ -49,7 +51,7 @@ const Booking = () => {
     const getSchedule = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3333/schedule/${timeId}`
+          `${BASE_URL}/schedule/${timeId}`
         );
         setSchedule(response.data.payload);
       } catch (error) {
@@ -63,7 +65,7 @@ const Booking = () => {
     const getDoctor = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3333/users/${schedule.doctorId}`
+          `${BASE_URL}/users/${schedule.doctorId}`
         );
         setDoctor(response.data.payload);
       } catch (error) {
@@ -81,7 +83,7 @@ const Booking = () => {
   const getPatient = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/users/${IdUser}`
+        `${BASE_URL}/users/${IdUser}`
       );
       setPatient(response.data.payload);
     } catch (error) {
@@ -95,7 +97,7 @@ const Booking = () => {
       currentDate.setHours(0, 0, 0, 0);
 
       const response = await axios.post(
-        `http://localhost:3333/booking`,
+        `${BASE_URL}/booking`,
         {
           statusId: "S1",
           doctorId: doctor.id,
@@ -134,7 +136,7 @@ const Booking = () => {
   const handleSubmitUpdate = async (idUpdate) => {
     try {
       const response = await axios.patch(
-        `http://localhost:3333/users/${idUpdate}`,
+        `${BASE_URL}/users/${idUpdate}`,
         {
           firstName,
           lastName,
@@ -227,7 +229,7 @@ const Booking = () => {
         <div className="booking-container">
           <div className="booking-heading">
             <div className="content-left">
-              <img src={`http://localhost:3333/${doctor.image}`} />
+              <img src={`${BASE_URL}/${doctor.image}`} />
             </div>
             <div className="content-right">
               <h6>Đặt lịch khám</h6>

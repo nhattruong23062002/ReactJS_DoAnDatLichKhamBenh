@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import DoctorInfor from "../../../component/DoctorInfor";
 import Select from "react-select";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
+import { BASE_URL } from "../../../utils/apiConfig";
 
 const DetailSpecialty = () => {
   const [doctor, setDoctor] = useState("");
@@ -30,7 +31,7 @@ const DetailSpecialty = () => {
     const getSelectProvince = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3333/allcode?type=PROVINCE"
+          `${BASE_URL}/allcode?type=PROVINCE`
         );
         setProvine(response.data.payload);
       } catch (error) {
@@ -65,7 +66,7 @@ const DetailSpecialty = () => {
     }
     try {
       const response = await axios.get(
-        `http://localhost:3333/specialty/${id}?location=${dataProvince}`
+        `${BASE_URL}/specialty/${id}?location=${dataProvince}`
       );
       setDetailSpecialty(response.data.payload);
     } catch (error) {
@@ -91,7 +92,7 @@ const DetailSpecialty = () => {
         try {
           const doctorPromises = doctorIds.map(async (id) => {
             const response = await axios.get(
-              `http://localhost:3333/users/${id}`
+              `${BASE_URL}/users/${id}`
             );
             return response.data.payload;
           });

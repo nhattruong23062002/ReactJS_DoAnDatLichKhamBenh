@@ -7,6 +7,9 @@ import Select from "react-select";
 import axios from "axios";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import { useNavigate, useParams } from "react-router-dom";
+import { BASE_URL } from "../../../utils/apiConfig";
+
+
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 const UpdateHandbook = () => {
@@ -24,7 +27,7 @@ const UpdateHandbook = () => {
   const getHandbookDetail = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/handbook/${id}`,
+        `${BASE_URL}/handbook/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -70,7 +73,7 @@ const UpdateHandbook = () => {
       try {
         if(typeof tempAvatarFile === 'object'){
           const response = await axios.post(
-            "http://localhost:3333/users/upload-single",
+            `${BASE_URL}/users/upload-single`,
             formData,
             {
               headers: {
@@ -94,7 +97,7 @@ const UpdateHandbook = () => {
     try {
       if (fileName) {
         const response = await axios.patch(
-          `http://localhost:3333/handbook/${id}`,
+          `${BASE_URL}/handbook/${id}`,
           {
             title: titleHandbook,
             descriptionHTML: contentHTML,

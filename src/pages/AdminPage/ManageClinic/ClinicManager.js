@@ -11,6 +11,8 @@ import { PiPencilSimpleLineFill } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import UpdateClinic from "./UpdateClinic";
 import ModalDelete from "../../../component/ModalDelete";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const ClinicManager = () => {
   const [name, setName] = useState("");
@@ -26,7 +28,7 @@ const ClinicManager = () => {
 
   const getAllClinic = async () => {
     try {
-      const response = await axios.get("http://localhost:3333/clinic?name=", {
+      const response = await axios.get(`${BASE_URL}/clinic?name=`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -169,7 +171,7 @@ const ClinicManager = () => {
         <div>
           {record && record.image ? (
             <img
-              src={`http://localhost:3333/${record.image}`}
+              src={`${BASE_URL}/${record.image}`}
               alt="error"
               style={{ width: "100px" }}
             />
@@ -213,7 +215,7 @@ const ClinicManager = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:3333/clinic/${idDelete}`, {
+      const response = await axios.delete(`${BASE_URL}/clinic/${idDelete}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

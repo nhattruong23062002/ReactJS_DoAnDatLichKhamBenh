@@ -7,6 +7,8 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { IoIosPeople } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "./../../../utils/apiConfig";
+
 
 const MainDashboardAdmin = () => {
   const [totalDoctor, setTotalDoctor] = useState("");
@@ -22,7 +24,7 @@ const MainDashboardAdmin = () => {
   const getAllDoctor = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/users/getall-doctor?name="
+        `${BASE_URL}/users/getall-doctor?name=`
       );
       setTotalDoctor(response.data.payload.length);
     } catch (error) {
@@ -33,7 +35,7 @@ const MainDashboardAdmin = () => {
   const getAllPatient = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/users/getall-patient"
+        `${BASE_URL}/users/getall-patient`
       );
       setTotalPatient(response.data.payload.length);
     } catch (error) {
@@ -43,7 +45,7 @@ const MainDashboardAdmin = () => {
 
   const getAllClinic = async () => {
     try {
-      const response = await axios.get("http://localhost:3333/clinic?name=");
+      const response = await axios.get(`${BASE_URL}/clinic?name=`);
       setTotalClinic(response.data.payload.length);
     } catch (error) {
       console.error("Error:", error);
@@ -52,7 +54,7 @@ const MainDashboardAdmin = () => {
 
   const getAllSpecialty = async () => {
     try {
-      const response = await axios.get("http://localhost:3333/specialty?name=");
+      const response = await axios.get(`${BASE_URL}/specialty?name=`);
       setTotalSpecialty(response.data.payload.length);
     } catch (error) {
       console.error("Error:", error);
@@ -62,7 +64,7 @@ const MainDashboardAdmin = () => {
   const getTopPatient = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/users/outstanding-patient"
+        `${BASE_URL}/users/outstanding-patient`
       );
       setTopPatient(response.data.payload);
     } catch (error) {
@@ -73,7 +75,7 @@ const MainDashboardAdmin = () => {
   const getTopDoctor = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/users/outstanding-doctor"
+        `${BASE_URL}/users/outstanding-doctor`
       );
       setTopDoctor(response.data.payload);
     } catch (error) {
@@ -84,7 +86,7 @@ const MainDashboardAdmin = () => {
   const getTotalBookingCurrentWeek = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/booking/getAll-booking-currentWeek"
+        `${BASE_URL}/booking/getAll-booking-currentWeek`
       );
       console.log('««««« response »»»»»',response);
       setTotalBookingCurrentWeek(response.data.payload);

@@ -1,11 +1,12 @@
 import React from 'react'
 import './DoctorInfor.scss';
+import { BASE_URL } from "./../../utils/apiConfig";
 
 const DoctorInfor = (doctor) => {
   return (
     <div className='infor-doctor container'>
     <div className='content-left'>
-      <img src={`http://localhost:3333/${doctor.doctor.image}`} />
+      <img src={`${BASE_URL}/${doctor.doctor.image}`} />
     </div>
     {doctor && doctor.doctor.Markdown &&
     <div className='content-right'>

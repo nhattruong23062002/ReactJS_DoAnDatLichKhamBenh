@@ -8,6 +8,7 @@ import jwt_decode from "jwt-decode";
 import SideBarDoctor from "../../component/SidebarDoctor";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "./../../utils/apiConfig";
 
 
 const LayoutAdmin = () => {
@@ -38,7 +39,7 @@ const LayoutAdmin = () => {
   useEffect(() => {
       const getUser = async () => {
         try {
-          const response = await axios.get(`http://localhost:3333/users/${IdUser}`);
+          const response = await axios.get(`${BASE_URL}/users/${IdUser}`);
           setUser(response.data.payload);
         } catch (error) {
           console.error("Error searching products:", error);
@@ -73,7 +74,7 @@ const LayoutAdmin = () => {
             <div className="user-wrapper">
               <div className="btn-group">
               <div className="has-dropdown">
-                <img className="avatar" src={`http://localhost:3333/${user.image}`} />
+                <img className="avatar" src={`${BASE_URL}/${user.image}`} />
                 <ul className="sub-menu">
                     <li>
                       <p onClick={handleLogout}>

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { Pagination } from "antd";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const SpecialtyList = () => {
   const [specialtys, setSpecialtys] = useState("");
@@ -14,7 +16,7 @@ const SpecialtyList = () => {
     const getSpecialtys = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3333/specialty?name="
+          `${BASE_URL}/specialty?name=`
         );
         setSpecialtys(response.data.payload);
       } catch (error) {
@@ -43,7 +45,7 @@ const SpecialtyList = () => {
               onClick={() => handleClick(item.id)}
             >
               <div style={{ width: "220px",height:'120px', backgroundColor: "#fff" }}>
-                <img src={`http://localhost:3333/${item.image}`} />
+                <img src={`${BASE_URL}/${item.image}`} />
               </div>
               <p>{item.name}</p>
             </div>

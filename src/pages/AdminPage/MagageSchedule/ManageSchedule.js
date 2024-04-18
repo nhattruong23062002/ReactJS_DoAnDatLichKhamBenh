@@ -8,6 +8,8 @@ import moment from "moment";
 import "moment/locale/vi";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import jwt_decode from "jwt-decode";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const ManageSchedule = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -41,7 +43,7 @@ const ManageSchedule = () => {
   const getAllDoctor = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/users/getall-doctor?name="
+      `${BASE_URL}/users/getall-doctor?name=`
       );
       setDoctor(response.data.payload);
     } catch (error) {
@@ -52,7 +54,7 @@ const ManageSchedule = () => {
   const getAllTime = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/allcode/?type=TIME"
+        `${BASE_URL}/allcode/?type=TIME`
       );
       setTIMES(response.data.payload);
     } catch (error) {
@@ -109,7 +111,7 @@ const ManageSchedule = () => {
         });
       }
       
-      const response = await axios.post("http://localhost:3333/schedule", {
+      const response = await axios.post(`${BASE_URL}/schedule`, {
         result,
         doctorId: role === 'R1'? selectedOption.value : doctorId,
         date: formattedStartDate,

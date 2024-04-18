@@ -12,6 +12,7 @@ import Highlighter from "react-highlight-words";
 import { Button, Input, Space, Table } from "antd";
 import ModalDelete from "../../../component/ModalDelete";
 import { useLocation } from "react-router-dom";
+import { BASE_URL } from "../../../utils/apiConfig";
 
 const UserManager = () => {
   const [user, setUser] = useState("");
@@ -21,6 +22,7 @@ const UserManager = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const queryValue = searchParams.get("query");
+  
 
   const searchInput = useRef(null);
 
@@ -29,7 +31,7 @@ const UserManager = () => {
   const getAllUser = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3333/users?role=${queryValue || ''}`,
+        `${BASE_URL}/users?role=${queryValue || ''}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -224,7 +226,7 @@ const UserManager = () => {
 
   const handleDeleteUser = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:3333/users/${id}`, {
+      const response = await axios.delete(`${BASE_URL}/users/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

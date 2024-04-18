@@ -5,6 +5,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BASE_URL } from "./../../utils/apiConfig";
+
 
 const Handbook = () => {
   const [handbook, setHandbook] = useState("");
@@ -13,7 +15,7 @@ const Handbook = () => {
   useEffect(() => {
     const getAllHandbook = async () => {
       try {
-        const response = await axios.get("http://localhost:3333/handbook");
+        const response = await axios.get(`${BASE_URL}/handbook`);
         setHandbook(response.data.payload);
       } catch (error) {
         console.error("Error searching products:", error);
@@ -49,7 +51,7 @@ const Handbook = () => {
             handbook.map((c) => (
               <div className="section-item"  key={c.id} onClick={() => handleHandBookDetail(c.id)}>
                 <div className="flex-handbook">
-                  <img src={`http://localhost:3333/${c.image}`} />
+                  <img src={`${BASE_URL}/${c.image}`} />
                   <h3>
                     {c.title}
                   </h3>

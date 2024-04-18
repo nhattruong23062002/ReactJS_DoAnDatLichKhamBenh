@@ -7,6 +7,8 @@ import Select from "react-select";
 import axios from "axios";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 const AddSpecialty = () => {
@@ -47,7 +49,7 @@ const AddSpecialty = () => {
       formData.append("file", tempAvatarFile);
 
       try {
-        const response = await axios.post("http://localhost:3333/users/upload-single", formData, {
+        const response = await axios.post(`${BASE_URL}/users/upload-single`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
@@ -66,7 +68,7 @@ const AddSpecialty = () => {
   const postSpecialty = async () => {
     try {
       if (fileName) {
-        const response = await axios.post("http://localhost:3333/specialty",    
+        const response = await axios.post(`${BASE_URL}/specialty`,    
         {
           name: nameSpecialty,
           descriptionHTML: contentHTML,

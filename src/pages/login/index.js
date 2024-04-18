@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
 import { setTokenToLocalStorage } from "../../utils/tokenUtils";
 import styles from "./login.module.css"
+import { BASE_URL } from "./../../utils/apiConfig";
+
 
 
 const LoginForm = () => {
@@ -81,7 +83,7 @@ const LoginForm = () => {
 
   const  handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:3333/users/login", {
+      const response = await axios.post(`${BASE_URL}/users/login`, {
         email,
         password,
       });
@@ -112,7 +114,7 @@ const LoginForm = () => {
 
   const handleSignUp = async () => {
     try {
-      const response = await axios.post("http://localhost:3333/users", {
+      const response = await axios.post(`${BASE_URL}/users`, {
         firstName,
         lastName,
         phoneNumber,

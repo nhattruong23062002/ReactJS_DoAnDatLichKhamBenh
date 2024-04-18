@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const VerifyBooking = () => {
   const [notice, setNotice] = useState("");
@@ -14,7 +16,7 @@ const VerifyBooking = () => {
 
         if (token && doctorId) {
           const response = await axios.post(
-            `http://localhost:3333/booking/verify-book-appointment`,
+            `${BASE_URL}/booking/verify-book-appointment`,
             {
                 token: token,
                 doctorId: doctorId,

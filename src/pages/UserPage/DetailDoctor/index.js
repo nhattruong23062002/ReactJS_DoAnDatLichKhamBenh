@@ -5,6 +5,8 @@ import DoctorSchedule from "../../../component/DoctorSchedule";
 import DoctorExtraInfor from "../../../component/DoctorExtraInfor";
 import DoctorInfor from "../../../component/DoctorInfor";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const DetailDoctor = () => {
   const [doctor, setDoctor] = useState("");
@@ -12,7 +14,7 @@ const DetailDoctor = () => {
 
   const getDoctor = async () => {
     try {
-      const response = await axios.get(`http://localhost:3333/users/${id}`);
+      const response = await axios.get(`${BASE_URL}/users/${id}`);
       setDoctor(response.data.payload);
     } catch (error) {
       console.error("Error searching products:", error);

@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "./../../utils/apiConfig";
 
 const OutstandingDoctor = () => {
   const [user, setUser] = useState("");
@@ -13,7 +14,7 @@ const OutstandingDoctor = () => {
   const getAllUser = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/users/getall-doctor?name="
+        `${BASE_URL}/users/getall-doctor?name=`
       );
       setUser(response.data.payload);
       console.log("««««« response.data.payload »»»»»", response.data.payload);
@@ -59,7 +60,7 @@ const OutstandingDoctor = () => {
                 onClick={() => handleDoctorDetail(p.id)}
               >
                 <div className="customize-border">
-                  <img src={`http://localhost:3333/${p.image}`} />
+                  <img src={`${BASE_URL}/${p.image}`} />
                   <div className="info-doctor">
                     <h3>
                       {p.positionData.valueVi} {p.firstName} {p.lastName}

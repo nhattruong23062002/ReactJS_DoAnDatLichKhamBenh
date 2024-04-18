@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const AddUser = () => {
   const [firstName, setFirstName] = useState("");
@@ -81,7 +83,7 @@ const AddUser = () => {
       formData.append("file", tempAvatarFile);
 
       try {
-        const response = await axios.post("http://localhost:3333/users/upload-single", formData, {
+        const response = await axios.post(`${BASE_URL}/users/upload-single`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
@@ -100,7 +102,7 @@ const AddUser = () => {
   const postOtherInfo = async () => {
     try {
       if (fileName) {
-        const response = await axios.post("http://localhost:3333/users",
+        const response = await axios.post(`${BASE_URL}/users`,
           {
             firstName,
             lastName,

@@ -6,6 +6,7 @@ import { getTokenFromLocalStorage } from "./../../../utils/tokenUtils";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
+import { BASE_URL } from "../../../utils/apiConfig";
 
 const Profile = () => {
   const [userId, setUserId] = useState(null);
@@ -46,7 +47,7 @@ const Profile = () => {
     const getProfileData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3333/users/${userId}`,
+          `${BASE_URL}/users/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -110,7 +111,7 @@ const Profile = () => {
 
       // Upload avatar
       const uploadAvatarResponse = await axios.post(
-        "http://localhost:3333/users/upload-single",
+        `${BASE_URL}/users/upload-single`,
         formData,
         {
           headers: {
@@ -125,7 +126,7 @@ const Profile = () => {
 
       // Update profile with the new image URL
       await axios.patch(
-        `http://localhost:3333/users/${userId}`,
+        `${BASE_URL}/users/${userId}`,
         {
           newProfile,
           image: uploadedImage,
@@ -172,7 +173,7 @@ const Profile = () => {
               id="avatarImg"
               src={
                 profile.image
-                  ? `http://localhost:3333/${profile.image}`
+                  ? `${BASE_URL}/${profile.image}`
                   : "https://banner2.cleanpng.com/20180514/gre/kisspng-computer-icons-avatar-user-profile-clip-art-5af95fab3b2d13.0220186015262923952424.jpg"
               }
               alt="avatar"

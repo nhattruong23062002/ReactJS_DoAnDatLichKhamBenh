@@ -3,6 +3,8 @@ import axios from "axios";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import Select from "react-select";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const UpdateUser = () => {
   const [firstName, setFirstName] = useState("");
@@ -29,13 +31,13 @@ const UpdateUser = () => {
   const getAllSelect = async () => {
     try {
       const response1 = await axios.get(
-        "http://localhost:3333/allcode?type=GENDER"
+        `${BASE_URL}/allcode?type=GENDER`
       );
       const response2 = await axios.get(
-        "http://localhost:3333/allcode?type=POSITION"
+        `${BASE_URL}/allcode?type=POSITION`
       );
       const response3 = await axios.get(
-        "http://localhost:3333/allcode?type=ROLE"
+        `${BASE_URL}/allcode?type=ROLE`
       );
       setSelectGender(response1.data.payload);
       setSelectPosition(response2.data.payload);
@@ -47,7 +49,7 @@ const UpdateUser = () => {
 
   const getUserDetail = async () => {
     try {
-      const response = await axios.get(`http://localhost:3333/users/${id}=`, {
+      const response = await axios.get(`${BASE_URL}/users/${id}=`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -168,7 +170,7 @@ const UpdateUser = () => {
       try {
         if (typeof tempAvatarFile === "object") {
           const response = await axios.post(
-            "http://localhost:3333/users/upload-single",
+            `${BASE_URL}/users/upload-single`,
             formData,
             {
               headers: {
@@ -192,7 +194,7 @@ const UpdateUser = () => {
     try {
       if (fileName) {
         const response = await axios.patch(
-          `http://localhost:3333/users/${id}`,
+          `${BASE_URL}/users/${id}`,
           {
             firstName,
             lastName,
@@ -286,7 +288,7 @@ const UpdateUser = () => {
   );
 
   if (tempAvatarFile && typeof tempAvatarFile !== "object") {
-    var dataAvatar = `http://localhost:3333/${tempAvatarFile}`;
+    var dataAvatar = `${BASE_URL}/${tempAvatarFile}`;
   }
 
   return (

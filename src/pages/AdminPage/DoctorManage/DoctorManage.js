@@ -6,6 +6,7 @@ import "react-markdown-editor-lite/lib/index.css";
 import Select from "react-select";
 import axios from "axios";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
+import { BASE_URL } from "../../../utils/apiConfig";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -40,22 +41,22 @@ export default (props) => {
   const getAllSelect = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:3333/users/getall-doctor?name="
+        `${BASE_URL}/users/getall-doctor?name=`
       );
       const response1 = await axios.get(
-        "http://localhost:3333/allcode?type=PRICE"
+        `${BASE_URL}/allcode?type=PRICE`
       );
       const response2 = await axios.get(
-        "http://localhost:3333/allcode?type=PAYMENT"
+        `${BASE_URL}/allcode?type=PAYMENT`
       );
       const response3 = await axios.get(
-        "http://localhost:3333/allcode?type=PROVINCE"
+        `${BASE_URL}/allcode?type=PROVINCE`
       );
       const response4 = await axios.get(
-        "http://localhost:3333/specialty?name="
+        `${BASE_URL}/specialty?name=`
       );
       const response5 = await axios.get(
-        "http://localhost:3333/clinic?name="
+        `${BASE_URL}/clinic?name=`
       );
       setDoctor(response.data.payload);
       setPrice(response1.data.payload);
@@ -78,7 +79,7 @@ export default (props) => {
       try {
         if (selectedOption) {
           const response = await axios.get(
-            `http://localhost:3333/users/${selectedOption.value}`
+            `${BASE_URL}/users/${selectedOption.value}`
           );
           if(response.data.payload.Markdown.contentHTML === null){
             setContentHTML('');
@@ -144,7 +145,7 @@ export default (props) => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3333/markdown/save-info-doctor",
+        `${BASE_URL}/markdown/save-info-doctor`,
         {
           contentHTML: contentHTML,
           contentMarkdown: contentMarkdown,
@@ -158,7 +159,7 @@ export default (props) => {
         }
       );
       const response1 = await axios.post(
-        "http://localhost:3333/doctor-infor",
+        `${BASE_URL}/doctor-infor`,
         {
           doctorId: selectedOption.value,
           priceId: selectedPrice.value,
@@ -193,7 +194,7 @@ export default (props) => {
   const handleUpdateSubmit = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:3333/markdown/${selectedOption.value}`,
+        `${BASE_URL}/markdown/${selectedOption.value}`,
         {
           contentHTML: contentHTML,
           contentMarkdown: contentMarkdown,
@@ -207,7 +208,7 @@ export default (props) => {
         }
       );
       const response1 = await axios.patch(
-        `http://localhost:3333/doctor-infor/${selectedOption.value}`,
+        `${BASE_URL}/doctor-infor/${selectedOption.value}`,
         {
           doctorId: selectedOption.value,
           priceId: selectedPrice.value,

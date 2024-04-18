@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Input, Pagination } from "antd";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
+import { BASE_URL } from "../../../utils/apiConfig";
+
 
 const ClinicList = () => {
   const [clinics, setClinics] = useState("");
@@ -15,7 +17,7 @@ const ClinicList = () => {
     const getClinics = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3333/clinic?name=${nameClinic}`
+          `${BASE_URL}/clinic?name=${nameClinic}`
         );
         setClinics(response.data.payload);
       } catch (error) {
@@ -51,7 +53,7 @@ const ClinicList = () => {
               onClick={() => handleClick(item.id)}
             >
               <div style={{ width: "220px", backgroundColor: "#fff" }}>
-                <img src={`http://localhost:3333/${item.image}`} />
+                <img src={`${BASE_URL}/${item.image}`} />
               </div>
               <p>{item.name}</p>
             </div>
