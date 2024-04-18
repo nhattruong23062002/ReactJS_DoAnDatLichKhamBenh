@@ -22,14 +22,14 @@ const ModalConfirm =  (({ isModalOpen, handleSubmit, handleCancelModal, rowData,
 
   return (
     <>
-      <Modal title="Xác nhận và gửi hóa đơn cho bệnh nhân" open={isModalOpen} onOk={handleSubmit} onCancel={handleCancelModal}>
+      <Modal title="Xác nhận và gửi hóa đơn / đơn thuốc cho bệnh nhân" open={isModalOpen} onOk={handleSubmit} onCancel={handleCancelModal}>
         <div className='wrap-modal-confirm'>
             <div className='email-confirm'>
                 <p>Emai bệnh nhân</p>
                 <input type='text'value={rowData.patientData.email}/>
             </div>
             <div className='invoice-confirm'>
-                <p>Chọn file đơn thuốc</p>
+                <p>Chọn file hóa đơn / đơn thuốc</p>
                 <input  type="file" required accept="image/*" onChange={handleAvatarChange}/>
             </div>
         </div>

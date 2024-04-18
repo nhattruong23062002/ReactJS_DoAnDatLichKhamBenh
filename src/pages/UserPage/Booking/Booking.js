@@ -28,7 +28,7 @@ const Booking = () => {
   const navigate = useNavigate();
 
   const token = getTokenFromLocalStorage();
-  const IdUser = getIdUser();
+  const  {IdUser, emailUser} = getIdUser();
   const date = new Date(schedule.date);
 
   // Lấy ngày tháng năm
@@ -116,7 +116,8 @@ const Booking = () => {
           year: year,
           doctorFirstName: doctor.firstName ,
           doctorLastName: doctor.lastName,
-          doctorPosition: doctor.positionData.valueVi
+          doctorPosition: doctor.positionData.valueVi,
+          emailUser,
         },
 
         {

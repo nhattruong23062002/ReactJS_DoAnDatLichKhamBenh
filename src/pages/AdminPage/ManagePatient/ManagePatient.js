@@ -256,7 +256,7 @@ const ManagePatient = () => {
             className="btn-cancel"
             onClick={() => handleCancelBooking(record)}
           >
-            Từ chối
+            Hủy
           </button>
         </div>
         ):(<p></p>)   

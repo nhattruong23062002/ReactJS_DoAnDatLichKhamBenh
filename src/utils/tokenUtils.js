@@ -17,9 +17,10 @@ export const getIdUser = () => {
   // Lưu token vào localStorage
   const token =  localStorage.getItem("token");
   const decodedToken = jwt_decode(token);
+  const emailUser = decodedToken.email;
   const IdUser = decodedToken.id;
 
-  return IdUser;
+  return {emailUser,IdUser};
 };
 
   
