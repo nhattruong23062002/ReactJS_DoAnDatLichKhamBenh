@@ -7,8 +7,8 @@ import BreadcrumbComponent from "../../../component/Breadcrumb";
 import { BASE_URL } from "../../../utils/apiConfig";
 
 
-const SpecialtyList = () => {
-  const [specialtys, setSpecialtys] = useState("");
+const HandbookList = () => {
+  const [handbooks, setHandbooks] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const pageSize = 10;
@@ -17,23 +17,23 @@ const SpecialtyList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getSpecialtys = async () => {
+    const getHandbooks= async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/specialty?name=&page=${currentPage}&limit=${pageSize}`
+          `${BASE_URL}/handbook?page=${currentPage}&limit=${pageSize}`
         );
-        setSpecialtys(response.data.payload);
+        setHandbooks(response.data.payload);
         setTotalItems(response.data.total);
       } catch (error) {
         console.error("Error searching products:", error);
       }
     };
-    getSpecialtys();
+    getHandbooks();
     window.scrollTo(0, 0); 
   }, [currentPage]);
 
   const handleClick = async (id) => {
-    navigate(`/detail-specialty/${id}`);
+    navigate(`/detail-handbook/${id}`);
   };
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -42,12 +42,12 @@ const SpecialtyList = () => {
   return (
     <div className="specialty-list container">
       <div className="specialty-list-top">
-      <BreadcrumbComponent currentPage = {'Danh sách chuyên khoa '}/>
+      <BreadcrumbComponent currentPage = {'Danh sách cẩm nang '}/>
       </div>
       <div className="specialty-list-content">
-        <h4 style={{ marginTop: "10px" }}>Danh sách chuyên khoa khám bệnh</h4>
-        {specialtys &&
-          specialtys.map((item) => (
+        <h4 style={{ marginTop: "10px" }}>Danh sách cẩm nang</h4>
+        {handbooks &&
+          handbooks.map((item) => (
             <div
               className="specialty-item"
               key={item.id}
@@ -56,7 +56,7 @@ const SpecialtyList = () => {
               <div style={{ width: "220px",height:'120px', backgroundColor: "#fff" }}>
                 <img src={`${BASE_URL}/${item.image}`} />
               </div>
-              <p>{item.name}</p>
+              <p>{item.title}</p>
             </div>
           ))}
       </div>
@@ -78,4 +78,4 @@ const SpecialtyList = () => {
   );
 };
 
-export default SpecialtyList;
+export default HandbookList;

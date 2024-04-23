@@ -3,6 +3,7 @@ import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import HomePage from "./pages/UserPage/Homepage/HomePage";
 import Layout from "./layout/User/layout";
 import "./styles/global.scss";
+import "./styles/responsive.scss";
 import UserManager from "./pages/AdminPage/UserManager/UserManager";
 import LayoutAdmin from "./layout/Admin";
 import AddUser from "./pages/AdminPage/UserManager/AddUser";
@@ -38,11 +39,11 @@ import HandbookManager from "./pages/AdminPage/ManageHandbook/HandbookManager";
 import AddHandbook from "./pages/AdminPage/ManageHandbook/AddHandbook";
 import UpdateHandbook from "./pages/AdminPage/ManageHandbook/UpdateHandbook";
 import DetailHandbook from "./pages/UserPage/DetailHandbook";
+import HandbookList from "./pages/UserPage/HandbookList";
 
 function App() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  console.log("««««« token »»»»»", window.location.pathname);
 
   useEffect(() => {
     if (
@@ -73,7 +74,7 @@ function App() {
           <Route path="/verify-booking" element={<VerifyBooking />} />
           <Route path="/detail-specialty/:id" element={<DetailSpecialty />} />
           <Route path="/detail-clinic/:id" element={<DetailClinic />} />
-          <Route path="/handbook-list" element={<SpecialtyList />} />
+          <Route path="/handbook-list" element={<HandbookList />} />
           <Route path="/detail-handbook/:id" element={<DetailHandbook />} />\
           <Route path="/specialty-list" element={<SpecialtyList />} />
           <Route path="/clinic-list" element={<ClinicList />} />

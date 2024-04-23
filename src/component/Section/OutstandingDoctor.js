@@ -9,13 +9,12 @@ import { BASE_URL } from "./../../utils/apiConfig";
 
 const OutstandingDoctor = () => {
   const [user, setUser] = useState("");
+  const [slidesToShow, setSlidesToShow] = useState(4);
   const navigate = useNavigate();
 
   const getAllUser = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/users/getall-doctor?name=`
-      );
+      const response = await axios.get(`${BASE_URL}/users/getall-doctor?name=`);
       setUser(response.data.payload);
       console.log("««««« response.data.payload »»»»»", response.data.payload);
     } catch (error) {
@@ -25,7 +24,23 @@ const OutstandingDoctor = () => {
   useEffect(() => {
     getAllUser();
   }, []);
-  console.log("««««« user »»»»»", user);
+
+  useEffect(() => {
+    const updateSlidesToShow = () => {
+      if (window.innerWidth < 570) {
+        setSlidesToShow(2.5);
+      } else {
+        setSlidesToShow(4);
+      }
+    };
+
+    window.addEventListener("resize", updateSlidesToShow);
+
+    updateSlidesToShow();
+    return () => {
+      window.removeEventListener("resize", updateSlidesToShow);
+    };
+  }, []);
 
   const handleDoctorDetail = async (id) => {
     navigate(`/detail-doctor/${id}`);
@@ -39,8 +54,8 @@ const OutstandingDoctor = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
+    slidesToShow: slidesToShow,
+    slidesToScroll: slidesToShow,
     //variableWidth: true,
     infinite: false,
   };

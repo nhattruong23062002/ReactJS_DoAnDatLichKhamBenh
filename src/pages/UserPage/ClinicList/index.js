@@ -6,10 +6,12 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
 import { BASE_URL } from "../../../utils/apiConfig";
 
-
 const ClinicList = () => {
   const [clinics, setClinics] = useState("");
   const [nameClinic, setNameClinic] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const pageSize = 10;
 
   const navigate = useNavigate();
 
@@ -17,15 +19,22 @@ const ClinicList = () => {
     const getClinics = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/clinic?name=${nameClinic}`
+          `${BASE_URL}/clinic?name=${nameClinic}&page=${currentPage}&limit=${pageSize}`
         );
         setClinics(response.data.payload);
+        setTotalItems(response.data.total);
       } catch (error) {
         console.error("Error searching products:", error);
       }
     };
     getClinics();
-  }, [nameClinic]);
+
+    window.scrollTo(0, 0);
+  }, [currentPage, nameClinic]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const handleClick = async (id) => {
     navigate(`/detail-Clinic/${id}`);
@@ -67,9 +76,10 @@ const ClinicList = () => {
         }}
       >
         <Pagination
-          style={{ fontSize: "20px" }}
-          defaultCurrent={1}
-          total={50}
+          current={currentPage}
+          total={totalItems}
+          pageSize={pageSize}
+          onChange={handlePageChange}
         />
       </div>
     </div>

@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "./../../utils/apiConfig";
 
-
 const Handbook = () => {
   const [handbook, setHandbook] = useState("");
   const navigate = useNavigate();
@@ -49,12 +48,14 @@ const Handbook = () => {
         <Slider {...settings}>
           {handbook &&
             handbook.map((c) => (
-              <div className="section-item"  key={c.id} onClick={() => handleHandBookDetail(c.id)}>
+              <div
+                className="section-item"
+                key={c.id}
+                onClick={() => handleHandBookDetail(c.id)}
+              >
                 <div className="flex-handbook">
                   <img src={`${BASE_URL}/${c.image}`} />
-                  <h3>
-                    {c.title}
-                  </h3>
+                  <h3>{c.title}</h3>
                 </div>
               </div>
             ))}

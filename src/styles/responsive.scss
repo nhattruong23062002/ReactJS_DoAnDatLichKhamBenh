@@ -1,0 +1,182 @@
+@media screen and (max-width: 577px) {
+    .home-baner{
+        height: 620px !important;
+    }
+    .center-content {
+        display: none !important;
+    }
+    .home-header-content {
+        width: 100% !important;
+        display: flex;
+        justify-content: space-between;
+        .right-content{
+            width: 40% !important;
+
+            .support {
+                margin-right: 35px !important;
+            }
+        }
+    }
+    .wrapper{
+    
+        h2{
+            margin: 50px 0px 30px 0px;
+        }
+        .wrapper-content{
+            display: flex;
+            flex-direction: column;
+            
+            iframe{
+                width: 100%;
+            }
+            .logoTV{
+                div{
+                    padding: 10px 0px;
+                }
+                img{
+                    height: 40px;
+                    margin: 5px;
+                }
+            }
+        }
+    }
+    .section-header{
+        padding: 30px 10px !important;
+        h2 {
+            font-size: 25px !important;
+        }
+    }
+    .specialty{
+        height: 360px !important;
+    }
+    .medical-facility {
+        height: 320px !important;
+    }
+    .section{
+        .section-item{
+            img{
+                height: 100px !important;
+            }
+        }
+    }
+    .outstanding-doctor{
+        img{
+            width: 100px !important;
+        }
+    }
+    .handbook{
+        height: 340px;
+        background: #f5f5f5;
+        .section-item{
+            margin-right: 10px;
+            .flex-handbook{
+                display: flex;
+                flex-direction: column;
+                img{
+                    height: 82px !important;
+                    text-align: center;
+                }
+                h3{
+                    font-weight: 400;
+                    font-size: 16px;
+                    padding: 0px 10px;
+                }
+              
+            }
+    
+        }
+    }
+    .slick-arrow{
+        display: none !important;
+    } 
+    .flex-handbook{
+        padding-right: 10px;
+    }
+
+    .introduce-website{
+        height: 450px;
+    }
+    .specialty-list-content{
+        .profile-container{
+            flex-direction: column !important;
+        }
+        .profile-avatar{
+            img{
+                width: 150px !important;
+                height: 150px !important;
+            }
+            margin-bottom: 20px;
+        }
+    }
+    .ChangePassword_form__Rz6Nn{
+        width: 250px !important;
+    }
+    .wrapper-item-history {
+        width: 100% !important;
+        padding: 20px !important;
+    }
+    
+    .wrapper-history-left{
+        flex: 1;
+        height: 185px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .wrapper-history-left h6 {
+        color: #48b0f7;
+        margin-top: 5px;
+    }
+
+    .wrapper-history-icon{
+        width: 60px;
+        height: 60px;
+    }
+    .wrapper-history-icon img{
+        width: 30px;
+        height: 40px;
+    }
+
+    .wrapper-history-right{
+        margin-left: 10px;
+    }
+
+    .wrapper-history-right h5{
+        font-size: 18px;
+    }
+
+    .wrapper-time-history span{
+        color: rgb(255, 193, 14) !important;
+        font-size: 16px !important;
+    }
+    
+    .wrapper-history-right p{
+        font-size: 16px;
+        margin-bottom: 0px;
+    }
+
+    .wrapper-history-right div{
+        width:100%;
+    }
+
+    .wrapper-history-right .icon-status{
+    color: green;
+    margin-right: 5px;
+    font-size: 18px;
+    margin-left: 5px;
+    }
+
+    .wrapper-history-right i{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    } 
+
+    .specialty-item{
+        div{
+            width: 180px !important;
+        }
+    }
+
+}

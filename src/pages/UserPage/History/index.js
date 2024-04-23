@@ -10,12 +10,11 @@ import moment from "moment";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
 import { BASE_URL } from "../../../utils/apiConfig";
 
-
 const History = () => {
   const [patient, setPatient] = useState("");
   const [allHistoryBooking, setAllHistoryBooking] = useState("");
   const navigate = useNavigate();
-  const IdPatient = getIdUser();
+  const { IdUser } = getIdUser();
 
   useEffect(() => {
     getPatient();
@@ -24,9 +23,7 @@ const History = () => {
 
   const getPatient = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/users/${IdPatient}`
-      );
+      const response = await axios.get(`${BASE_URL}/users/${IdUser}`);
       setPatient(response.data.payload);
     } catch (error) {
       console.error("Error:", error);
@@ -36,13 +33,14 @@ const History = () => {
   const getHistoryBooking = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/booking/history-booking?patientId=${IdPatient}`
+        `${BASE_URL}/booking/history-booking?patientId=${IdUser}`
       );
       setAllHistoryBooking(response.data.payload);
     } catch (error) {
       console.error("Error:", error);
     }
   };
+  console.log("««««« IdPatient »»»»»", IdUser);
 
   return (
     <div className="container" style={{ minHeight: "720px" }}>

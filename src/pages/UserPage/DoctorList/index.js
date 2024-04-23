@@ -10,6 +10,9 @@ import { BASE_URL } from "../../../utils/apiConfig";
 const DoctorList = () => {
   const [doctors, setDoctors] = useState("");
   const [nameDoctor, setNameDoctor] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const pageSize = 5;
 
   const navigate = useNavigate();
 
@@ -17,16 +20,22 @@ const DoctorList = () => {
     const getDoctors = async () => {
       try {
         const response = await axios.get(
-          `${BASE_URL}/users/getall-doctor?name=${nameDoctor}`
+          `${BASE_URL}/users/getall-doctor?name=${nameDoctor}&page=${currentPage}&limit=${pageSize}`
         );
         setDoctors(response.data.payload);
+        setTotalItems(response.data.total);
         console.log("««««« response.data.payload »»»»»", response.data.payload);
       } catch (error) {
         console.error("Error searching products:", error);
       }
     };
     getDoctors();
-  }, [nameDoctor]);
+    window.scrollTo(0, 0); 
+  }, [currentPage, nameDoctor]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   const handleClick = async (id) => {
     navigate(`/detail-doctor/${id}`);
@@ -71,9 +80,10 @@ const DoctorList = () => {
         }}
       >
         <Pagination
-          style={{ fontSize: "20px" }}
-          defaultCurrent={1}
-          total={50}
+          current={currentPage}
+          total={totalItems}
+          pageSize={pageSize}
+          onChange={handlePageChange}
         />
       </div>
     </div>
