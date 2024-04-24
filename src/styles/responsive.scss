@@ -10,10 +10,14 @@
         display: flex;
         justify-content: space-between;
         .right-content{
-            width: 40% !important;
+            width: 60% !important;
 
             .support {
-                margin-right: 35px !important;
+                margin-right: 25px !important;
+                font-size: 16px !important;
+            }
+            .language-vi{
+                font-size: 16px !important;
             }
         }
     }
@@ -177,6 +181,9 @@
         div{
             width: 180px !important;
         }
+        img{
+            width: 180px !important;
+        }
     }
     
     .clinic-item{
@@ -263,5 +270,12 @@
     }
     .ant-alert-description{
         font-size: 20px !important;
+    }
+    .card-bordered{
+        width: 400px !important;
+        margin-left: 170px !important;
+    }
+    .center-content{
+        width: 0 !important;
     }
 }
