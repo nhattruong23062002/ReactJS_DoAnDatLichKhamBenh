@@ -40,8 +40,6 @@ const History = () => {
       console.error("Error:", error);
     }
   };
-  console.log("««««« IdPatient »»»»»", IdUser);
-
   return (
     <div className="container" style={{ minHeight: "720px" }}>
       <div className="specialty-list-top">

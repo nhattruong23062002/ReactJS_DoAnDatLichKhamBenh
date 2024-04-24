@@ -41,8 +41,6 @@ const MedicalFacility = () => {
     };
   }, []);
 
-  console.log("««««« slidesToShow »»»»»", slidesToShow);
-
   const handleClinicDetail = async (id) => {
     navigate(`/detail-clinic/${id}`);
   };
