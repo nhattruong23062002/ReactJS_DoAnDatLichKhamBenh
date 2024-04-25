@@ -9,7 +9,6 @@ import { BASE_URL } from "./../../utils/apiConfig";
 
 const Specialty = () => {
   const [specialty, setSpecialty] = useState("");
-  const [slidesToShow, setSlidesToShow] = useState(4);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,29 +24,12 @@ const Specialty = () => {
     getAllUser();
   }, []);
 
-  useEffect(() => {
-    const updateSlidesToShow = () => {
-      if (window.innerWidth < 570) {
-        setSlidesToShow(2.5);
-      } else {
-        setSlidesToShow(4);
-      }
-    };
-
-    window.addEventListener("resize", updateSlidesToShow);
-
-    updateSlidesToShow();
-    return () => {
-      window.removeEventListener("resize", updateSlidesToShow);
-    };
-  }, []);
-
   var settings = {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: slidesToShow,
-    slidesToScroll: slidesToShow,
+    slidesToShow: window.innerWidth < 570 ? 2.5 : 4,
+    slidesToScroll: window.innerWidth < 570 ? 2.5 : 4,
     //variableWidth: true,
     infinite: false,
   };

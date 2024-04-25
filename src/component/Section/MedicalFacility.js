@@ -26,11 +26,8 @@ const MedicalFacility = () => {
 
   useEffect(() => {
     const updateSlidesToShow = () => {
-      if (window.innerWidth < 570) {
-        setSlidesToShow(2.5);
-      } else {
-        setSlidesToShow(4);
-      }
+      const newSlidesToShow = window.innerWidth < 570 ? 2.5 : 4;
+      setSlidesToShow(newSlidesToShow);
     };
 
     window.addEventListener("resize", updateSlidesToShow);
@@ -54,8 +51,8 @@ const MedicalFacility = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: slidesToShow,
-    slidesToScroll: slidesToShow,
+    slidesToShow: window.innerWidth < 570 ? 2.5 : 4,
+    slidesToScroll: window.innerWidth < 570 ? 2.5 : 4,
     //variableWidth: true,
     infinite: false,
   };
