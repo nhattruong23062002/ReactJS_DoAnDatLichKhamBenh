@@ -7,27 +7,43 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import BreadcrumbComponent from "../../../component/Breadcrumb";
 import { BASE_URL } from "../../../utils/apiConfig";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const Profile = () => {
   const [userId, setUserId] = useState(null);
   const [tempAvatarFile, setTempAvatarFile] = useState(null);
-  const [profile, setProfile] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    address: "",
-  });
-  const [newProfile, setNewProfile] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phoneNumber: "",
-    address: "",
-  });
 
   const navigate = useNavigate();
   const token = getTokenFromLocalStorage();
+  var fileName;
+
+  const signUpSchema = yup.object().shape({
+    firstName: yup.string().required("Vui lòng nhập họ"),
+    lastName: yup.string().required("Vui lòng nhập tên"),
+    email: yup
+      .string()
+      .email("Email phải đúng định dạng")
+      .required("Vui lòng nhập email"),
+    phoneNumber: yup
+      .string()
+      .matches(/^[0-9]{10}$/, "Số điện thoại phải đủ 10 số")
+      .required("Vui lòng nhập số điện thoại"),
+    address: yup.string().required("Vui lòng nhập địa chỉ"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(signUpSchema),
+  });
 
   useEffect(() => {
     if (token) {
@@ -46,43 +62,25 @@ const Profile = () => {
   useEffect(() => {
     const getProfileData = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/users/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const profileData = response.data.payload;
-        // Cập nhật state với thông tin profile nhận được từ API
-        setProfile({
-          firstName: profileData.firstName,
-          lastName: profileData.lastName,
-          email: profileData.email,
-          phoneNumber: profileData.phoneNumber,
-          image: profileData.image,
-          address: profileData.address,
+        const response = await axios.get(`${BASE_URL}/users/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
+        const profileData = response.data.payload;
+        setValue("firstName", profileData.firstName);
+        setValue("lastName", profileData.lastName);
+        setValue("email", profileData.email);
+        setValue("phoneNumber", profileData.phoneNumber);
+        setValue("address", profileData.address);
+        setValue("image", profileData.image);
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
     };
 
     getProfileData();
-  }, [userId]);
-
-  useEffect(() => {
-    setNewProfile(profile);
-  }, [profile]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewProfile((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  }, [userId, setValue, token]);
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
@@ -102,34 +100,37 @@ const Profile = () => {
     }
   };
 
-  const handleSave = async (e) => {
+  const handleSave = async (data) => {
     try {
-      e.preventDefault();
-
       const formData = new FormData();
       formData.append("file", tempAvatarFile);
+      if (tempAvatarFile != null) {
+        const response = await axios.post(
+          `${BASE_URL}/users/upload-single`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const uploadedImage = response.data.payload.location;
+        fileName = uploadedImage;
+      } else if (tempAvatarFile == null) {
+        fileName = "check";
+      }
 
-      // Upload avatar
-      const uploadAvatarResponse = await axios.post(
-        `${BASE_URL}/users/upload-single`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const imageValue =
+        (await fileName) !== "check" ? fileName : watch("image");
 
-      // Extract the image URL from the response
-      const uploadedImage = uploadAvatarResponse.data.payload.location;
+      console.log("Image to be updated:", imageValue);
 
-      // Update profile with the new image URL
       await axios.patch(
         `${BASE_URL}/users/${userId}`,
         {
-          newProfile,
-          image: uploadedImage,
+          ...data,
+          image: imageValue,
         },
         {
           headers: {
@@ -138,22 +139,13 @@ const Profile = () => {
         }
       );
 
-      // Update local profile state with the new image URL
-      setProfile((prevState) => ({
-        ...prevState,
-        ...newProfile,
-        image: uploadedImage,
-      }));
-
       alert("Bạn đã cập nhật thông tin thành công");
-      return uploadedImage; // Return the uploaded image URL
     } catch (error) {
       alert("Cập nhật thông tin thất bại");
       console.error("Error updating profile:", error);
-      throw error; // Re-throw the error to be caught by the caller if needed
+      throw error;
     }
   };
-
 
   return (
     <div className="container">
@@ -172,8 +164,8 @@ const Profile = () => {
             <img
               id="avatarImg"
               src={
-                profile.image
-                  ? `${BASE_URL}/${profile.image}`
+                watch("image")
+                  ? `${BASE_URL}/${watch("image")}`
                   : "https://banner2.cleanpng.com/20180514/gre/kisspng-computer-icons-avatar-user-profile-clip-art-5af95fab3b2d13.0220186015262923952424.jpg"
               }
               alt="avatar"
@@ -187,7 +179,7 @@ const Profile = () => {
             />
           </div>
           <div className="profile-content">
-            <form onSubmit={handleSave}>
+            <form onSubmit={handleSubmit(handleSave)}>
               <div>
                 <div className="row">
                   <div className="form-group col-md-6">
@@ -197,9 +189,13 @@ const Profile = () => {
                       type="text"
                       name="firstName"
                       required
-                      value={newProfile.firstName}
-                      onChange={handleInputChange}
+                      {...register("firstName")}
                     />
+                    {errors.firstName && (
+                      <p style={{ color: "red" }} className="error-yup">
+                        {errors.firstName.message}
+                      </p>
+                    )}
                   </div>
                   <div className="form-group col-md-6">
                     <label className="control-label">Tên</label>
@@ -208,9 +204,13 @@ const Profile = () => {
                       type="text"
                       name="lastName"
                       required
-                      value={newProfile.lastName}
-                      onChange={handleInputChange}
+                      {...register("lastName")}
                     />
+                    {errors.lastName && (
+                      <p style={{ color: "red" }} className="error-yup">
+                        {errors.lastName.message}
+                      </p>
+                    )}
                   </div>
                   <div className="form-group  col-md-6">
                     <label className="control-label">Số điện thoại</label>
@@ -219,9 +219,13 @@ const Profile = () => {
                       type="number"
                       required
                       name="phoneNumber"
-                      value={newProfile.phoneNumber}
-                      onChange={handleInputChange}
+                      {...register("phoneNumber")}
                     />
+                    {errors.phoneNumber && (
+                      <p style={{ color: "red" }} className="error-yup">
+                        {errors.phoneNumber.message}
+                      </p>
+                    )}
                   </div>
                   <div className="form-group col-md-6">
                     <label className="control-label">Địa chỉ email</label>
@@ -230,9 +234,13 @@ const Profile = () => {
                       type="text"
                       required
                       name="email"
-                      value={newProfile.email}
-                      onChange={handleInputChange}
+                      {...register("email")}
                     />
+                    {errors.email && (
+                      <p style={{ color: "red" }} className="error-yup">
+                        {errors.email.message}
+                      </p>
+                    )}
                   </div>
                   <div className="form-group col-md-6">
                     <label className="control-label">Địa chỉ thường trú</label>
@@ -240,9 +248,13 @@ const Profile = () => {
                       className="form-control"
                       type="text"
                       name="address"
-                      value={newProfile.address}
-                      onChange={handleInputChange}
+                      {...register("address")}
                     />
+                    {errors.address && (
+                      <p style={{ color: "red" }} className="error-yup">
+                        {errors.address.message}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <button

@@ -20,6 +20,13 @@
         display: flex;
         padding-left: 0px;
         flex-wrap: wrap;
+        .disabledTimeSchedule{
+            background-color: #ccc;
+            
+            &:hover{
+                background-color: #ccc;
+            }
+        }
         li{
             display: flex;
             align-items: center;

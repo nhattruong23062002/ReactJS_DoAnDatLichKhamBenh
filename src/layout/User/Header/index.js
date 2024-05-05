@@ -11,7 +11,6 @@ import axios from "axios";
 import { Input, QRCode, Space } from "antd";
 import { BASE_URL } from "../../../utils/apiConfig";
 
-
 const Header = () => {
   const [role, setRole] = useState("");
   const [id, setId] = useState("");
@@ -114,13 +113,13 @@ const Header = () => {
           <div className="support" onClick={() => setIsCheck(!isCheck)}>
             <AiFillQuestionCircle style={{ marginRight: "5px" }} />
             Hỗ trợ
-          {isCheck && (
-            <div className="QRcode">
-              <Space direction="vertical" align="center">
-                <QRCode value={"0353639495"}/>
-              </Space>
-            </div>
-          )}
+            {isCheck && (
+              <div className="QRcode">
+                <Space direction="vertical" align="center">
+                  <QRCode value={"0353639495"} />
+                </Space>
+              </div>
+            )}
           </div>
           {role === "R3" ? (
             <div className="has-dropdown">

@@ -9,7 +9,6 @@ import { BASE_URL } from "./../../utils/apiConfig";
 
 const MedicalFacility = () => {
   const [clinic, setClinic] = useState("");
-  const [slidesToShow, setSlidesToShow] = useState(4);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,22 +22,6 @@ const MedicalFacility = () => {
     };
     getAllClinic();
   }, []);
-
-  useEffect(() => {
-    const updateSlidesToShow = () => {
-      const newSlidesToShow = window.innerWidth < 570 ? 2.5 : 4;
-      setSlidesToShow(newSlidesToShow);
-    };
-
-    window.addEventListener("resize", updateSlidesToShow);
-
-    updateSlidesToShow();
-    return () => {
-      window.removeEventListener("resize", updateSlidesToShow);
-    };
-  }, []);
-
-  console.log("««««« slidesToShow »»»»»", slidesToShow);
 
   const handleClinicDetail = async (id) => {
     navigate(`/detail-clinic/${id}`);

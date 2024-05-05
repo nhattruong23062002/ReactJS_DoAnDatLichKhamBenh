@@ -1,27 +1,52 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import { BASE_URL } from "../../../utils/apiConfig";
-
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const AddUser = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
   const [roleId, setRole] = useState("");
   const [positionId, setPosition] = useState("");
   const [tempAvatarFile, setTempAvatarFile] = useState(null);
   const [fileName, setFileName] = useState(null);
-  const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = useState("");
+  const [data, setData] = useState("");
+  const navigate = useNavigate();
 
   const token = getTokenFromLocalStorage();
 
+  const updateUserSchema = yup.object().shape({
+    firstName: yup.string().required("Vui lòng nhập họ"),
+    lastName: yup.string().required("Vui lòng nhập tên"),
+    email: yup
+      .string()
+      .email("Email phải đúng định dạng")
+      .required("Vui lòng nhập email"),
+    phoneNumber: yup
+      .string()
+      .matches(/^[0-9]{10}$/, "Số điện thoại phải đủ 10 số")
+      .required("Vui lòng nhập số điện thoại"),
+    address: yup.string().required("Vui lòng nhập địa chỉ"),
+    password: yup
+      .string()
+      .min(6, "Password phải tối thiểu 6 ký tự")
+      .required("Vui lòng nhập Password"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(updateUserSchema),
+  });
 
   const mapGenderToValue = (selectedGender) => {
     if (selectedGender === "Nam") {
@@ -83,12 +108,16 @@ const AddUser = () => {
       formData.append("file", tempAvatarFile);
 
       try {
-        const response = await axios.post(`${BASE_URL}/users/upload-single`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.post(
+          `${BASE_URL}/users/upload-single`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const uploadedFileName = response.data.payload.location;
         setFileName(uploadedFileName); // Cập nhật giá trị fileName sau khi tải lên thành công
@@ -102,39 +131,33 @@ const AddUser = () => {
   const postOtherInfo = async () => {
     try {
       if (fileName) {
-        const response = await axios.post(`${BASE_URL}/users`,
+        const response = await axios.post(
+          `${BASE_URL}/users`,
           {
-            firstName,
-            lastName,
-            email,
-            address,
-            phoneNumber,
+            ...data,
             gender: mapGenderToValue(gender),
             positionId: mapRolePosition(positionId),
-            password,
             image: `${fileName}`,
             roleId: mapRoleToValue(roleId),
-          }, {
-          headers: {
-            Authorization: `Bearer ${token}`,
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         alert("Thêm mới thành công");
+        navigate("/admin/user-manage");
         console.log("Response from server:", response.data);
         return true;
       } else {
         console.error("fileName is not updated.");
       }
     } catch (error) {
-        const errors = error.response.data.error.errors[0];
-        if (errors.path === "email" || error.path === 'email_2') {
-          setEmailErrorMessage(errors.message);
-        } else if (errors.path === "phoneNumber" || error.path === "phoneNumber_2") {
-          setPhoneNumberErrorMessage(errors.message);
-      }
-      return false;
-    } 
+      console.log("««««« error »»»»»", error);
+    }
+    return false;
   };
 
   useEffect(() => {
@@ -144,15 +167,10 @@ const AddUser = () => {
         .then((isPostSuccessful) => {
           // Check if the post was successful before resetting the state
           if (isPostSuccessful) {
-            setFirstName("");
-            setLastName("");
-            setEmail("");
-            setAddress("");
-            setPhoneNumber("");
-            setPassword("");
+            reset();
             setTempAvatarFile(null);
             setPosition("");
-            setGender("")
+            setGender("");
             setRole("");
             setTempAvatarFile(null);
             const defaultImageSrc = `https://w7.pngwing.com/pngs/390/453/png-transparent-basic-add-new-create-plus-user-avatar-office-icon.png`;
@@ -167,22 +185,20 @@ const AddUser = () => {
     }
   }, [fileName]);
 
-
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
+  const handleSubmitUser = useCallback(
+    async (data) => {
       try {
-        if(!tempAvatarFile){
-          alert('Vui lòng chọn ảnh')
+        setData(data);
+        if (!tempAvatarFile) {
+          alert("Vui lòng chọn ảnh");
         }
         await handleUploadAvatar();
       } catch (error) {
         console.error("Error in handleSubmit:", error);
       }
     },
-    [firstName, lastName, email, address, phoneNumber, password, gender, roleId, positionId, tempAvatarFile]
+    [gender, roleId, positionId, tempAvatarFile]
   );
-
 
   return (
     <main className="app-content">
@@ -201,15 +217,14 @@ const AddUser = () => {
           <div className="tile">
             <h3 className="tile-title">Tạo mới User</h3>
             <div className="tile-body">
-              <form className="row" onSubmit={handleSubmit}>
+              <form className="row" onSubmit={handleSubmit(handleSubmitUser)}>
                 <div className="form-group col-md-4">
                   <label className="control-label">Họ</label>
                   <input
                     className="form-control"
                     type="text"
                     required
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    {...register("firstName")}
                   />
                 </div>
                 <div className="form-group col-md-4">
@@ -218,8 +233,7 @@ const AddUser = () => {
                     className="form-control"
                     type="text"
                     required
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    {...register("lastName")}
                   />
                 </div>
                 <div className="form-group col-md-4">
@@ -228,15 +242,11 @@ const AddUser = () => {
                     className="form-control"
                     type="text"
                     required
-                    value={email}
-                    onChange={(e) => {
-                      setEmailErrorMessage(null);
-                      setEmail(e.target.value);
-                    }}
+                    {...register("email")}
                   />
-                  {emailErrorMessage && (
-                    <p style={{ color: "red", fontSize: "12px", marginTop: "5px" }}>
-                      {emailErrorMessage}
+                  {errors.email && (
+                    <p style={{ color: "red" }} className="error-yup">
+                      {errors.email.message}
                     </p>
                   )}
                 </div>
@@ -246,8 +256,7 @@ const AddUser = () => {
                     className="form-control"
                     type="text"
                     required
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    {...register("address")}
                   />
                 </div>
                 <div className="form-group  col-md-4">
@@ -256,15 +265,11 @@ const AddUser = () => {
                     className="form-control"
                     type="number"
                     required
-                    value={phoneNumber}
-                    onChange={(e) => {
-                      setPhoneNumberErrorMessage(null);
-                      setPhoneNumber(e.target.value);
-                    }}
+                    {...register("phoneNumber")}
                   />
-                  {phoneNumberErrorMessage && (
-                    <p style={{ color: "red", fontSize: "12px", marginTop: "5px" }}>
-                      {phoneNumberErrorMessage}
+                  {errors.phoneNumber && (
+                    <p style={{ color: "red" }} className="error-yup">
+                      {errors.phoneNumber.message}
                     </p>
                   )}
                 </div>
@@ -274,9 +279,13 @@ const AddUser = () => {
                     className="form-control"
                     type="password"
                     required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    {...register("password")}
                   />
+                  {errors.password && (
+                    <p style={{ color: "red" }} className="error-yup">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
                 <div className="form-group col-md-4">
                   <label className="control-label">Giới tính</label>

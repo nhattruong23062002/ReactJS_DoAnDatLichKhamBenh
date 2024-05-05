@@ -22,7 +22,7 @@ const UserManager = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const queryValue = searchParams.get("query");
-  
+  const [idDelete, setIdDelete] = useState("");
 
   const searchInput = useRef(null);
 
@@ -31,7 +31,7 @@ const UserManager = () => {
   const getAllUser = async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/users?role=${queryValue || ''}`,
+        `${BASE_URL}/users?role=${queryValue || ""}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -203,13 +203,14 @@ const UserManager = () => {
       width: "15%",
       render: (text, record) => (
         <span>
-         <Link to={`/admin/user-manage/updateUser/${record.id}`}>
-            <PiPencilSimpleLineFill
-              className="icon-update"
-            />
+          <Link to={`/admin/user-manage/updateUser/${record.id}`}>
+            <PiPencilSimpleLineFill className="icon-update" />
           </Link>
           <a>
-            <MdDeleteForever className="icon-delete" onClick={() =>  handleShow(record.id)}/>
+            <MdDeleteForever
+              className="icon-delete"
+              onClick={() => handleShow(record.id)}
+            />
             <ModalDelete
               isModalOpen={show}
               handleOk={handleDeleteUser}
@@ -222,22 +223,25 @@ const UserManager = () => {
   ];
 
   const handleCancel = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = (id) => {
+    setShow(true);
+    setIdDelete(id);
+  };
 
-  const handleDeleteUser = async (id) => {
+  const handleDeleteUser = async () => {
     try {
-      const response = await axios.delete(`${BASE_URL}/users/${id}`, {
+      const response = await axios.delete(`${BASE_URL}/users/${idDelete}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       alert("Đã xóa thành công");
+      setShow(false);
       getAllUser();
     } catch (error) {
       console.error("Error searching products:", error);
     }
   };
-
 
   useEffect(() => {
     const $ = window.$;

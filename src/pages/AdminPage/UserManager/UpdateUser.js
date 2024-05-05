@@ -4,41 +4,55 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import Select from "react-select";
 import { BASE_URL } from "../../../utils/apiConfig";
-
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 const UpdateUser = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
   const [roleId, setRole] = useState("");
   const [positionId, setPosition] = useState("");
   const [tempAvatarFile, setTempAvatarFile] = useState(null);
-  const [fileName, setFileName] = useState(null);
-  const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [phoneNumberErrorMessage, setPhoneNumberErrorMessage] = useState("");
   const [selectGender, setSelectGender] = useState("");
   const [selectRole, setSelectRole] = useState("");
   const [selectPosition, setSelectPosition] = useState("");
+  const [data, setData] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
-
   const token = getTokenFromLocalStorage();
+  var fileName;
+
+  const updateUserSchema = yup.object().shape({
+    firstName: yup.string().required("Vui lòng nhập họ"),
+    lastName: yup.string().required("Vui lòng nhập tên"),
+    email: yup
+      .string()
+      .email("Email phải đúng định dạng")
+      .required("Vui lòng nhập email"),
+    phoneNumber: yup
+      .string()
+      .matches(/^[0-9]{10}$/, "Số điện thoại phải đủ 10 số")
+      .required("Vui lòng nhập số điện thoại"),
+    address: yup.string().required("Vui lòng nhập địa chỉ"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(updateUserSchema),
+  });
 
   const getAllSelect = async () => {
     try {
-      const response1 = await axios.get(
-        `${BASE_URL}/allcode?type=GENDER`
-      );
-      const response2 = await axios.get(
-        `${BASE_URL}/allcode?type=POSITION`
-      );
-      const response3 = await axios.get(
-        `${BASE_URL}/allcode?type=ROLE`
-      );
+      const response1 = await axios.get(`${BASE_URL}/allcode?type=GENDER`);
+      const response2 = await axios.get(`${BASE_URL}/allcode?type=POSITION`);
+      const response3 = await axios.get(`${BASE_URL}/allcode?type=ROLE`);
       setSelectGender(response1.data.payload);
       setSelectPosition(response2.data.payload);
       setSelectRole(response3.data.payload);
@@ -54,15 +68,16 @@ const UpdateUser = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setFirstName(response.data.payload.firstName);
-      setLastName(response.data.payload.lastName);
-      setAddress(response.data.payload.address);
-      setEmail(response.data.payload.email);
-      setPhoneNumber(response.data.payload.phoneNumber);
+      setValue("firstName", response.data.payload.firstName);
+      setValue("lastName", response.data.payload.lastName);
+      setValue("email", response.data.payload.email);
+      setValue("phoneNumber", response.data.payload.phoneNumber);
+      setValue("address", response.data.payload.address);
+      setValue("image", response.data.payload.image);
+
       setGender(response.data.payload.gender);
       setPosition(response.data.payload.positionId);
       setRole(response.data.payload.roleId);
-      setTempAvatarFile(response.data.payload.image);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -163,133 +178,56 @@ const UpdateUser = () => {
       reader.readAsDataURL(file);
     }
   };
-  const handleUploadAvatar = async () => {
-    if (tempAvatarFile) {
+
+  const handleSave = async (data) => {
+    try {
       const formData = new FormData();
       formData.append("file", tempAvatarFile);
-      try {
-        if (typeof tempAvatarFile === "object") {
-          const response = await axios.post(
-            `${BASE_URL}/users/upload-single`,
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          const uploadedFileName = response.data.payload.location;
-          setFileName(uploadedFileName);
-        } else {
-          setFileName("check");
-        }
-      } catch (error) {
-        console.error("Upload failed:", error);
-      }
-    }
-  };
-
-  const updateOtherInfo = async () => {
-    try {
-      if (fileName) {
-        const response = await axios.patch(
-          `${BASE_URL}/users/${id}`,
-          {
-            firstName,
-            lastName,
-            email,
-            address,
-            phoneNumber,
-            gender: gender,
-            positionId: positionId,
-            image: fileName !== "check" ? fileName : tempAvatarFile,
-            roleId: roleId,
-          },
+      if (tempAvatarFile != null) {
+        const response = await axios.post(
+          `${BASE_URL}/users/upload-single`,
+          formData,
           {
             headers: {
+              "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
             },
           }
         );
+        const uploadedImage = response.data.payload.location;
+        fileName = uploadedImage;
+      } else if (tempAvatarFile == null) {
+        fileName = "check";
+      }
 
-        alert("Update thành công");
-        navigate("/admin/user-manage");
-        console.log("Response from server:", response.data);
-        return true;
-      } else {
-        console.error("fileName is not updated.");
-      }
+      const imageValue = fileName !== "check" ? fileName : watch("image");
+
+      console.log("Image to be updated:", imageValue);
+
+      await axios.patch(
+        `${BASE_URL}/users/${id}`,
+        {
+          ...data,
+          gender: gender,
+          positionId: positionId,
+          image: imageValue,
+          roleId: roleId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Bạn đã cập nhật thông tin thành công");
+      navigate("/admin/user-manage");
     } catch (error) {
-      const errors = error.response.data.error.errors[0];
-      if (errors.path === "email" || error.path === "email_2") {
-        setEmailErrorMessage(errors.message);
-      } else if (
-        errors.path === "phoneNumber" ||
-        error.path === "phoneNumber_2"
-      ) {
-        setPhoneNumberErrorMessage(errors.message);
-      }
-      return false;
+      alert("Cập nhật thông tin thất bại");
+      console.log("Error:", error);
+      throw error;
     }
   };
-
-  useEffect(() => {
-    if (fileName) {
-      updateOtherInfo()
-        .then((isPostSuccessful) => {
-          if (isPostSuccessful) {
-            setFirstName("");
-            setLastName("");
-            setEmail("");
-            setAddress("");
-            setPhoneNumber("");
-            setPassword("");
-            setTempAvatarFile(null);
-            setPosition("");
-            setGender("");
-            setRole("");
-            setTempAvatarFile(null);
-            /*             const defaultImageSrc = `https://w7.pngwing.com/pngs/390/453/png-transparent-basic-add-new-create-plus-user-avatar-office-icon.png`;
-            const imgElement = document.getElementById("avatarImg");
-            imgElement.src = defaultImageSrc; */
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error.message);
-        });
-    }
-  }, [fileName]);
-
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      try {
-        if (!tempAvatarFile) {
-          alert("Vui lòng chọn ảnh");
-        }
-        await handleUploadAvatar();
-      } catch (error) {
-        console.error("Error in handleSubmit:", error);
-      }
-    },
-    [
-      firstName,
-      lastName,
-      email,
-      address,
-      phoneNumber,
-      password,
-      gender,
-      roleId,
-      positionId,
-      tempAvatarFile,
-    ]
-  );
-
-  if (tempAvatarFile && typeof tempAvatarFile !== "object") {
-    var dataAvatar = `${BASE_URL}/${tempAvatarFile}`;
-  }
 
   return (
     <main className="app-content">
@@ -308,15 +246,14 @@ const UpdateUser = () => {
           <div className="tile">
             <h3 className="tile-title">Update User</h3>
             <div className="tile-body">
-              <form className="row" onSubmit={handleSubmit}>
+              <form className="row" onSubmit={handleSubmit(handleSave)}>
                 <div className="form-group col-md-4">
                   <label className="control-label">Họ</label>
                   <input
                     className="form-control"
                     type="text"
                     required
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    {...register("firstName")}
                   />
                 </div>
                 <div className="form-group col-md-4">
@@ -325,8 +262,7 @@ const UpdateUser = () => {
                     className="form-control"
                     type="text"
                     required
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    {...register("lastName")}
                   />
                 </div>
                 <div className="form-group col-md-4">
@@ -335,21 +271,11 @@ const UpdateUser = () => {
                     className="form-control"
                     type="text"
                     required
-                    value={email}
-                    onChange={(e) => {
-                      setEmailErrorMessage(null);
-                      setEmail(e.target.value);
-                    }}
+                    {...register("email")}
                   />
-                  {emailErrorMessage && (
-                    <p
-                      style={{
-                        color: "red",
-                        fontSize: "12px",
-                        marginTop: "5px",
-                      }}
-                    >
-                      {emailErrorMessage}
+                  {errors.email && (
+                    <p style={{ color: "red" }} className="error-yup">
+                      {errors.email.message}
                     </p>
                   )}
                 </div>
@@ -359,8 +285,7 @@ const UpdateUser = () => {
                     className="form-control"
                     type="text"
                     required
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
+                    {...register("address")}
                   />
                 </div>
                 <div className="form-group  col-md-4">
@@ -369,21 +294,11 @@ const UpdateUser = () => {
                     className="form-control"
                     type="number"
                     required
-                    value={phoneNumber}
-                    onChange={(e) => {
-                      setPhoneNumberErrorMessage(null);
-                      setPhoneNumber(e.target.value);
-                    }}
+                    {...register("phoneNumber")}
                   />
-                  {phoneNumberErrorMessage && (
-                    <p
-                      style={{
-                        color: "red",
-                        fontSize: "12px",
-                        marginTop: "5px",
-                      }}
-                    >
-                      {phoneNumberErrorMessage}
+                  {errors.phoneNumber && (
+                    <p style={{ color: "red" }} className="error-yup">
+                      {errors.phoneNumber.message}
                     </p>
                   )}
                 </div>
@@ -426,7 +341,11 @@ const UpdateUser = () => {
                   <div className="wrapper-upload">
                     <img
                       id="avatarImg"
-                      src={dataAvatar}
+                      src={
+                        watch("image")
+                          ? `${BASE_URL}/${watch("image")}`
+                          : "https://banner2.cleanpng.com/20180514/gre/kisspng-computer-icons-avatar-user-profile-clip-art-5af95fab3b2d13.0220186015262923952424.jpg"
+                      }
                       alt=""
                     />
                     <input

@@ -40,24 +40,9 @@ import AddHandbook from "./pages/AdminPage/ManageHandbook/AddHandbook";
 import UpdateHandbook from "./pages/AdminPage/ManageHandbook/UpdateHandbook";
 import DetailHandbook from "./pages/UserPage/DetailHandbook";
 import HandbookList from "./pages/UserPage/HandbookList";
+import ChatOnline from "./pages/AdminPage/ChatOnline";
 
 function App() {
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-
-  useEffect(() => {
-    if (
-      (!token && window.location.pathname === "/bookingSuccess") ||
-      (!token && window.location.pathname === "/booking/:timeId") ||
-      (!token && window.location.pathname === "/profile") ||
-      (!token && window.location.pathname === "/history") ||
-      (!token && window.location.pathname === "/changePassword") ||
-      (!token && window.location.pathname.startsWith("/admin"))
-    ) {
-      navigate("/login");
-    }
-  }, []);
-
   return (
     <div className="App">
       <Routes>
@@ -113,10 +98,7 @@ function App() {
             path="/admin/clinic-manager/updateClinic/:id"
             element={<UpdateClinic />}
           />
-          <Route
-            path="/admin/handbook-manager"
-            element={<HandbookManager />}
-          />
+          <Route path="/admin/handbook-manager" element={<HandbookManager />} />
           <Route
             path="/admin/handbook-manager/addHandbook"
             element={<AddHandbook />}
@@ -126,6 +108,7 @@ function App() {
             element={<UpdateHandbook />}
           />
           <Route path="/admin/dashboard" element={<MainDashboardAdmin />} />
+          <Route path="/admin/chat" element={<ChatOnline />} />
         </Route>
         <Route path="/doctor" element={<LayoutAdmin />}>
           <Route path="/doctor/manage-schedule" element={<ManageSchedule />} />
