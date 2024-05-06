@@ -13,7 +13,6 @@ import UpdateSpecialty from "./UpdateSpecialty";
 import ModalDelete from "../../../component/ModalDelete";
 import { BASE_URL } from "../../../utils/apiConfig";
 
-
 const SpecialtyManager = () => {
   const [name, setName] = useState("");
   const [searchText, setSearchText] = useState("");
@@ -23,19 +22,15 @@ const SpecialtyManager = () => {
   const [show, setShow] = useState(false);
   const [idDelete, setIdDelete] = useState();
 
-
   const token = getTokenFromLocalStorage();
 
   const getAllSpecialty = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/specialty?name=`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${BASE_URL}/specialty?name=`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setSpecialty(response.data.payload);
     } catch (error) {
       console.error("Error:", error);
@@ -192,12 +187,13 @@ const SpecialtyManager = () => {
       render: (text, record) => (
         <span>
           <Link to={`/admin/specialty-manager/updateSpecialty/${record.id}`}>
-            <PiPencilSimpleLineFill
-              className="icon-update"
-            />
+            <PiPencilSimpleLineFill className="icon-update" />
           </Link>
           <a>
-            <MdDeleteForever className="icon-delete"  onClick={() =>  handleShow(record.id)}/>
+            <MdDeleteForever
+              className="icon-delete"
+              onClick={() => handleShow(record.id)}
+            />
             <ModalDelete
               isModalOpen={show}
               handleOk={handleDelete}
@@ -211,16 +207,13 @@ const SpecialtyManager = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(
-        `${BASE_URL}/specialty/${idDelete}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${BASE_URL}/specialty/${idDelete}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       getAllSpecialty();
-      setShow(false)
+      setShow(false);
     } catch (error) {
       console.error("Error searching products:", error);
     }
@@ -228,9 +221,9 @@ const SpecialtyManager = () => {
 
   const handleCancel = () => setShow(false);
   const handleShow = (id) => {
-    setIdDelete(id)
-    setShow(true)
-  }
+    setIdDelete(id);
+    setShow(true);
+  };
 
   return (
     <main className="app-content">

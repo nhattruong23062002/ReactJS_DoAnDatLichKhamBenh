@@ -1279,3 +1279,15 @@
     font-size: 12px;
     margin: 0px;
   }
+  .cancel-booking{
+    padding: 5px 10px;
+    position: absolute;
+    border-radius: 5px;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+
+    &:hover{
+      background-color: rgb(223, 3, 3);
+    }
+  }

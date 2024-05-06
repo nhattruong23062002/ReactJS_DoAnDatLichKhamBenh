@@ -3,6 +3,7 @@ import axios from "axios";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { FaRegClock, FaRegCalendarAlt, FaCheckCircle } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa6";
 import { MdCancel } from "react-icons/md";
 import { getIdUser } from "../../../utils/tokenUtils";
 import { MdNewReleases } from "react-icons/md";
@@ -36,6 +37,20 @@ const History = () => {
         `${BASE_URL}/booking/history-booking?patientId=${IdUser}`
       );
       setAllHistoryBooking(response.data.payload);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  const handleCancelBooking = async (id) => {
+    try {
+      const response = await axios.patch(`${BASE_URL}/booking/${id}`, {
+        statusId: "S4",
+      });
+      console.log("««««« response »»»»»", response);
+      if (response.data.payload) {
+        alert("Bạn đã hủy lịch thành công");
+        getHistoryBooking();
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -92,12 +107,28 @@ const History = () => {
                       <FaCheckCircle className="icon-status" />
                     ) : e["statusDataPatient.valueVi"] === "Lịch hẹn mới" ? (
                       <MdNewReleases className="icon-status-new" />
+                    ) : e["statusDataPatient.valueVi"] === "Đã xác nhận" ? (
+                      <FaCheck
+                        className="icon-status-confirmed"
+                        style={{ margin: "0px 5px" }}
+                      />
                     ) : (
                       <MdCancel className="icon-status-cancel" />
                     )}
                     {e["statusDataPatient.valueVi"]}
                   </div>
                   <i>Giá: {e["doctorDataInfo.priceData.valueVi"]}đ</i>
+                  {e["statusDataPatient.valueVi"] === "Đã xác nhận" ||
+                  e["statusDataPatient.valueVi"] === "Lịch hẹn mới" ? (
+                    <button
+                      className="btn-cancel cancel-booking"
+                      onClick={() => handleCancelBooking(e.id)}
+                    >
+                      Hủy lịch
+                    </button>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>

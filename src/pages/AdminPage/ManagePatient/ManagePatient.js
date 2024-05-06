@@ -8,7 +8,6 @@ import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import jwt_decode from "jwt-decode";
 import { Table } from "antd";
 
-
 import "../../../styles/mainAdmin.css";
 import { BASE_URL } from "../../../utils/apiConfig";
 
@@ -21,7 +20,7 @@ const ManagePatient = () => {
   const [formattedStartDate, setFormattedStartDate] = useState(null);
   const [dataFromChild, setDataFromChild] = useState("");
   const [dataUser, setDataUser] = useState(null);
-  const [activeItem, setActiveItem] = useState('S2');
+  const [activeItem, setActiveItem] = useState("S2");
   const [scheduleId, setScheduleId] = useState(null);
   const [schedule, setSchedule] = useState("");
 
@@ -43,7 +42,6 @@ const ManagePatient = () => {
     "Thứ Bảy",
   ];
   const dayName = daysOfWeek[dayOfWeek];
-
 
   const handleItemClick = (itemName) => {
     setActiveItem(itemName);
@@ -71,7 +69,7 @@ const ManagePatient = () => {
 
   const showModal = (data) => {
     setIsModalOpen(true);
-    setDataUser(data)
+    setDataUser(data);
   };
 
   const handleDataFromChild = (data) => {
@@ -107,16 +105,13 @@ const ManagePatient = () => {
 
   const handleSend = async (rowData) => {
     try {
-        const response = await axios.patch(
-          `${BASE_URL}/booking/${rowData.id}`,
-          {
-            statusId: "S3",
-            fileName,
-          }
-        );
-        setIsModalOpen(false);
-        getAllBooking();
-        setFileName('');
+      const response = await axios.patch(`${BASE_URL}/booking/${rowData.id}`, {
+        statusId: "S3",
+        fileName,
+      });
+      setIsModalOpen(false);
+      getAllBooking();
+      setFileName("");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -128,16 +123,13 @@ const ManagePatient = () => {
     }
   }, [fileName]);
 
-  const handleSubmit = useCallback(
-    async () => {
-      try {
-        await handleUploadAvatar();
-      } catch (error) {
-        console.error("Error in handleSubmit:", error);
-      }
-    },
-    [dataFromChild]
-  );
+  const handleSubmit = useCallback(async () => {
+    try {
+      await handleUploadAvatar();
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+    }
+  }, [dataFromChild]);
 
   const handleCancelModal = () => {
     setIsModalOpen(false);
@@ -151,7 +143,7 @@ const ManagePatient = () => {
         `${BASE_URL}/booking?doctorId=${doctorId}&date=${formattedStartDate}&status=${activeItem}`
       );
       setBooking(response.data.payload);
-      setScheduleId(response.data.payload[0].scheduleId)
+      setScheduleId(response.data.payload[0].scheduleId);
       console.log("««««« response.data.payload »»»»»", response.data.payload);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -163,17 +155,14 @@ const ManagePatient = () => {
     if (formattedStartDate !== null) {
       getAllBooking();
     }
-  }, [formattedStartDate,activeItem]);
-
+  }, [formattedStartDate, activeItem]);
 
   const handleCancelBooking = async (rowData) => {
     try {
-      const response = await axios.patch(
-        `${BASE_URL}/booking/${rowData.id}`,
-        {
-          statusId: "S4",
-        }
-      );
+      const response = await axios.patch(`${BASE_URL}/booking/${rowData.id}`, {
+        statusId: "S4",
+        role: "doctor",
+      });
       alert("Lịch hẹn đã được hủy");
       getAllBooking();
     } catch (error) {
@@ -184,9 +173,7 @@ const ManagePatient = () => {
   useEffect(() => {
     const getSchedule = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/schedule/${scheduleId}`
-        );
+        const response = await axios.get(`${BASE_URL}/schedule/${scheduleId}`);
         setSchedule(response.data.payload);
       } catch (error) {
         console.error("Error searching products:", error);
@@ -194,7 +181,6 @@ const ManagePatient = () => {
     };
     getSchedule();
   }, [scheduleId]);
-
 
   const columns = [
     {
@@ -211,11 +197,16 @@ const ManagePatient = () => {
       title: "Thời gian",
       key: "time",
       width: "15%",
-      render: (text, record) =>
-      <div>
-        <p style={{marginBottom:"0px"}}>{record.timeTypeDataPatient.valueVi}</p>
-        <span>{dayName} - {day}/{month}/{year}</span>
-      </div> 
+      render: (text, record) => (
+        <div>
+          <p style={{ marginBottom: "0px" }}>
+            {record.timeTypeDataPatient.valueVi}
+          </p>
+          <span>
+            {dayName} - {day}/{month}/{year}
+          </span>
+        </div>
+      ),
     },
     {
       title: "Số điện thoại",
@@ -239,28 +230,29 @@ const ManagePatient = () => {
       title: "Action",
       key: "action",
       width: "20%",
-      render: (text, record) => (
-        activeItem === 'S2' ? (
+      render: (text, record) =>
+        activeItem === "S2" ? (
           <div className="btn-manage-patient">
-          <button onClick={() => showModal(record)} className="btn-confirm">
-            Xác nhận
-          </button>
-          <ModalConfirm
-            isModalOpen={isModalOpen}
-            handleSubmit={handleSubmit}
-            handleCancelModal={handleCancelModal}
-            rowData={record}
-            onDataFromChild={handleDataFromChild}
-          />
-          <button
-            className="btn-cancel"
-            onClick={() => handleCancelBooking(record)}
-          >
-            Hủy
-          </button>
-        </div>
-        ):(<p></p>)   
-      ),
+            <button onClick={() => showModal(record)} className="btn-confirm">
+              Xác nhận
+            </button>
+            <ModalConfirm
+              isModalOpen={isModalOpen}
+              handleSubmit={handleSubmit}
+              handleCancelModal={handleCancelModal}
+              rowData={record}
+              onDataFromChild={handleDataFromChild}
+            />
+            <button
+              className="btn-cancel"
+              onClick={() => handleCancelBooking(record)}
+            >
+              Hủy
+            </button>
+          </div>
+        ) : (
+          <p></p>
+        ),
     },
   ];
 
@@ -294,9 +286,24 @@ const ManagePatient = () => {
                 </div>
                 <div className="wrap-navigation">
                   <ul className="nav-list">
-                    <li className={activeItem === 'S2' ? 'active' : ''} onClick={() => handleItemClick('S2')}>Chờ xác nhận</li>
-                    <li className={activeItem === 'S3' ? 'active' : ''} onClick={() => handleItemClick('S3')}>Hoàn thành</li>
-                    <li className={activeItem === 'S4' ? 'active' : ''} onClick={() => handleItemClick('S4')}>Đã hủy</li>
+                    <li
+                      className={activeItem === "S2" ? "active" : ""}
+                      onClick={() => handleItemClick("S2")}
+                    >
+                      Chờ xác nhận
+                    </li>
+                    <li
+                      className={activeItem === "S3" ? "active" : ""}
+                      onClick={() => handleItemClick("S3")}
+                    >
+                      Hoàn thành
+                    </li>
+                    <li
+                      className={activeItem === "S4" ? "active" : ""}
+                      onClick={() => handleItemClick("S4")}
+                    >
+                      Đã hủy
+                    </li>
                   </ul>
                 </div>
                 <div className="table-data">

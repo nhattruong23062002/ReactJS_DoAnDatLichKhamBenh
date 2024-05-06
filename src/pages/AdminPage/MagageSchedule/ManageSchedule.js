@@ -9,18 +9,19 @@ import "moment/locale/vi";
 import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import jwt_decode from "jwt-decode";
 import { BASE_URL } from "../../../utils/apiConfig";
-
+import { Button, Input, Space, Table } from "antd";
 
 const ManageSchedule = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [doctor, setDoctor] = useState("");
   const [doctorId, setDoctorId] = useState("");
+  const [schedule, setSchedule] = useState("");
   const [times, setTIMES] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const token = getTokenFromLocalStorage();
   const [activeTimes, setActiveTimes] = useState([]);
   const [role, setRole] = useState("");
-  const [selectKey, setSelectKey] = useState(Date.now()); 
+  const [selectKey, setSelectKey] = useState(Date.now());
 
   startDate.setHours(0, 0, 0, 0);
   const formattedStartDate = new Date(startDate).getTime();
@@ -31,8 +32,8 @@ const ManageSchedule = () => {
       try {
         // Giải mã token để lấy thông tin customerId
         const decodedToken = jwt_decode(token);
-        const {id:id, roleId: roleId } = decodedToken;
-        setDoctorId(id)
+        const { id: id, roleId: roleId } = decodedToken;
+        setDoctorId(id);
         setRole(roleId);
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -42,9 +43,7 @@ const ManageSchedule = () => {
 
   const getAllDoctor = async () => {
     try {
-      const response = await axios.get(
-      `${BASE_URL}/users/getall-doctor?name=`
-      );
+      const response = await axios.get(`${BASE_URL}/users/getall-doctor?name=`);
       setDoctor(response.data.payload);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -53,9 +52,7 @@ const ManageSchedule = () => {
 
   const getAllTime = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/allcode/?type=TIME`
-      );
+      const response = await axios.get(`${BASE_URL}/allcode/?type=TIME`);
       setTIMES(response.data.payload);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -83,6 +80,10 @@ const ManageSchedule = () => {
     getAllTime();
   }, []);
 
+  useEffect(() => {
+    getAllSchedule();
+  }, [startDate]);
+
   const handleTimeClick = (timeId) => {
     // Kiểm tra xem thời gian đã được kích hoạt chưa
     const isActive = activeTimes.includes(timeId);
@@ -95,32 +96,32 @@ const ManageSchedule = () => {
       setActiveTimes([...activeTimes, timeId]);
     }
   };
-  
-  
+
   const handleSubmit = async () => {
     try {
       let result = [];
       if (activeTimes && activeTimes.length > 0) {
         activeTimes.map((time) => {
           let object = {};
-          object.doctorId = role === 'R1'? selectedOption.value : doctorId;
+          object.doctorId = role === "R1" ? selectedOption.value : doctorId;
           object.date = formattedStartDate;
           object.timeType = time;
-          object.maxNumber = 10;
+          object.maxNumber = 5;
           result.push(object);
         });
       }
-      
+
       const response = await axios.post(`${BASE_URL}/schedule`, {
         result,
-        doctorId: role === 'R1'? selectedOption.value : doctorId,
+        doctorId: role === "R1" ? selectedOption.value : doctorId,
         date: formattedStartDate,
       });
       if (response.data.payload.length > 0) {
         alert("Tạo lịch thành công");
         setActiveTimes([]);
         setSelectedOption(null);
-        setSelectKey(Date.now()); 
+        setSelectKey(Date.now());
+        getAllSchedule();
       } else {
         alert("Lịch đã tạo trước đó");
       }
@@ -129,22 +130,66 @@ const ManageSchedule = () => {
     }
   };
 
+  const getAllSchedule = async () => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/schedule?doctorId=${doctorId}&date=${formattedStartDate}`
+      );
+      setSchedule(response.data.payload);
+    } catch (error) {
+      console.error("Error searching products:", error);
+    }
+  };
+
+  const columns = [
+    {
+      title: "Giờ khám",
+      key: "timeTypeData",
+      width: "40%",
+      render: (text, record) => <div>{record.timeTypeData.valueVi}</div>,
+    },
+    {
+      title: "Số bệnh nhân đã đặt",
+      dataIndex: "currentNumber",
+      key: "currentNumber",
+      width: "30%",
+      render: (text) => (text === null ? 0 : text),
+    },
+    {
+      title: "Số bệnh nhân tối đa cho phép",
+      dataIndex: "maxNumber",
+      key: "maxNumber",
+      width: "30%",
+    },
+  ];
+
   return (
     <div className="container">
       <h3 className="doctor-title">Quản lý kế hoạch khám bệnh cho bác sĩ</h3>
       <div className="schedule-wrapTop ">
-        {role && role === 'R1' ? (
-        <>
-          <div className="schedule-name">
-            <h6>Chọn bác sĩ</h6>
-            <Select
-              key={selectKey} 
-              defaultValue={selectedOption}
-              onChange={setSelectedOption}
-              options={options}
-              className="schedule-select-doctor"
-            />
-          </div>
+        {role && role === "R1" ? (
+          <>
+            <div className="schedule-name">
+              <h6>Chọn bác sĩ</h6>
+              <Select
+                key={selectKey}
+                defaultValue={selectedOption}
+                onChange={setSelectedOption}
+                options={options}
+                className="schedule-select-doctor"
+              />
+            </div>
+            <div className="schedule-date">
+              <h6>Chọn ngày</h6>
+              <DatePicker
+                className="datepicker"
+                selected={startDate}
+                minDate={new Date()}
+                onChange={(date) => setStartDate(date)}
+              />
+            </div>
+          </>
+        ) : (
           <div className="schedule-date">
             <h6>Chọn ngày</h6>
             <DatePicker
@@ -154,17 +199,6 @@ const ManageSchedule = () => {
               onChange={(date) => setStartDate(date)}
             />
           </div>
-          </>       
-        ):(
-          <div className="schedule-date">
-          <h6>Chọn ngày</h6>
-          <DatePicker
-            className="datepicker"
-            selected={startDate}
-            minDate={new Date()}
-            onChange={(date) => setStartDate(date)}
-          />
-        </div>
         )}
       </div>
       <div className="schedule-wrapBottom">
@@ -179,6 +213,19 @@ const ManageSchedule = () => {
             </span>
           ))}
       </div>
+      {role && role === "R2" ? (
+        <div className="schedule-wrapTable">
+          <Table
+            style={{ width: "1050px" }}
+            columns={columns}
+            dataSource={schedule}
+          />
+          ;
+        </div>
+      ) : (
+        ""
+      )}
+
       <button className="btn-manageDoctor" onClick={handleSubmit}>
         Lưu lại
       </button>

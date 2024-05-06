@@ -1,1 +1,1 @@
-export const BASE_URL = "https://nodejs-datlichkhambenh-1.onrender.com";
+export const BASE_URL = "http://localhost:3333";

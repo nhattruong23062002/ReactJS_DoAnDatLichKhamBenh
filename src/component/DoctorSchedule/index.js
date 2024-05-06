@@ -81,8 +81,6 @@ const DoctorSchedule = (id) => {
     }
   };
 
-  console.log("««««« timeSchedule »»»»»", timeSchedule);
-
   return (
     <div>
       <select
