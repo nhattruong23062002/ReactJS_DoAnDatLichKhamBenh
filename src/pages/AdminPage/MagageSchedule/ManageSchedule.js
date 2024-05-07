@@ -75,15 +75,6 @@ const ManageSchedule = () => {
 
   const options = allName();
 
-  useEffect(() => {
-    getAllDoctor();
-    getAllTime();
-  }, []);
-
-  useEffect(() => {
-    getAllSchedule();
-  }, [startDate]);
-
   const handleTimeClick = (timeId) => {
     // Kiểm tra xem thời gian đã được kích hoạt chưa
     const isActive = activeTimes.includes(timeId);
@@ -140,6 +131,15 @@ const ManageSchedule = () => {
       console.error("Error searching products:", error);
     }
   };
+
+  useEffect(() => {
+    getAllDoctor();
+    getAllTime();
+  }, []);
+
+  useEffect(() => {
+    getAllSchedule();
+  }, [startDate, doctorId]);
 
   const columns = [
     {
