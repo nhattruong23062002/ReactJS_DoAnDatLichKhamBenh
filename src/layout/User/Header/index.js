@@ -43,7 +43,7 @@ const Header = () => {
       }
     };
     getDoctor();
-  }, [id]);
+  }, [role, id]);
 
   const handleLogin = async () => {
     navigate("/login");

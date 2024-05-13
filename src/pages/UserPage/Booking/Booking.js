@@ -3,13 +3,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { Collapse } from "antd";
 import jwt_decode from "jwt-decode";
-import { getTokenFromLocalStorage,getIdUser } from "../../../utils/tokenUtils";
+import { getTokenFromLocalStorage, getIdUser } from "../../../utils/tokenUtils";
 import UpdateUser from "../../AdminPage/UserManager/UpdateUser";
 import ChangeInfor from "./ChangeInfor";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../utils/apiConfig";
-
-
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const Booking = () => {
   const [firstName, setFirstName] = useState("");
@@ -23,12 +23,13 @@ const Booking = () => {
   const [schedule, setSchedule] = useState("");
   const [patient, setPatient] = useState("");
   const [description, setDescription] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { timeId } = useParams();
   const navigate = useNavigate();
 
   const token = getTokenFromLocalStorage();
-  const  {IdUser, emailUser} = getIdUser();
+  const { IdUser, emailUser } = getIdUser();
   const date = new Date(schedule.date);
 
   // Lấy ngày tháng năm
@@ -50,9 +51,7 @@ const Booking = () => {
   useEffect(() => {
     const getSchedule = async () => {
       try {
-        const response = await axios.get(
-          `${BASE_URL}/schedule/${timeId}`
-        );
+        const response = await axios.get(`${BASE_URL}/schedule/${timeId}`);
         setSchedule(response.data.payload);
       } catch (error) {
         console.error("Error searching products:", error);
@@ -82,9 +81,7 @@ const Booking = () => {
 
   const getPatient = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/users/${IdUser}`
-      );
+      const response = await axios.get(`${BASE_URL}/users/${IdUser}`);
       setPatient(response.data.payload);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -92,45 +89,50 @@ const Booking = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const currentDate = new Date();
-      currentDate.setHours(0, 0, 0, 0);
+    if (!isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
 
-      const response = await axios.post(
-        `${BASE_URL}/booking`,
-        {
-          statusId: "S1",
-          doctorId: doctor.id,
-          patientId: patient.id,
-          date: currentDate,
-          description: description,
-          timeType: schedule.timeType,
-          scheduleId: timeId,
+        const response = await axios.post(
+          `${BASE_URL}/booking`,
+          {
+            statusId: "S1",
+            doctorId: doctor.id,
+            patientId: patient.id,
+            date: currentDate,
+            description: description,
+            timeType: schedule.timeType,
+            scheduleId: timeId,
 
-          patientFirstName: patient.firstName,
-          patientLastName: patient.lastName,
-          timeTypeValue: schedule.timeTypeData.valueVi,
-          dayName: dayName,
-          day: day,
-          month: month,
-          year: year,
-          doctorFirstName: doctor.firstName ,
-          doctorLastName: doctor.lastName,
-          doctorPosition: doctor.positionData.valueVi,
-          emailUser,
-        },
-
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+            patientFirstName: patient.firstName,
+            patientLastName: patient.lastName,
+            timeTypeValue: schedule.timeTypeData.valueVi,
+            dayName: dayName,
+            day: day,
+            month: month,
+            year: year,
+            doctorFirstName: doctor.firstName,
+            doctorLastName: doctor.lastName,
+            doctorPosition: doctor.positionData.valueVi,
+            emailUser,
           },
-        }
-      );
-      console.log("««««« response.data.payload »»»»»", response.data.payload);
-      navigate(`/bookingSuccess`);
-    } catch (error) {
-      alert("Đã có lỗi")
-      console.error("Error searching products:", error);
+
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        navigate(`/bookingSuccess`);
+      } catch (error) {
+        alert("Đã có lỗi");
+        console.error("Error searching products:", error);
+      }
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 1000);
     }
   };
 
@@ -156,14 +158,13 @@ const Booking = () => {
       console.log("Response from server:", response.data);
     } catch (error) {
       console.error("Error:", error);
-      alert('Có lỗi thông tin muốn cập nhật')
+      alert("Có lỗi thông tin muốn cập nhật");
       setShow(false);
     }
   };
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
-
 
   const items = [
     {
@@ -189,40 +190,42 @@ const Booking = () => {
             <p>Địa chỉ:</p>
             <p>{patient.address}</p>
           </div>
-          <button className="update-infor-booking" onClick={() => handleShowModal(patient)}>Điều chỉnh</button>
+          <button
+            className="update-infor-booking"
+            onClick={() => handleShowModal(patient)}
+          >
+            Điều chỉnh
+          </button>
           <ChangeInfor
-              handleSubmitUpdate={() => {
-                handleSubmitUpdate(patient.id);
-              }}
-              show={show}
-              handleClose={handleClose}
-              firstName={firstName}
-              lastName={lastName}
-              phoneNumber={phoneNumber}
-              email={email}
-              address={address}
-              setEmail={setEmail}
-              setLastName={setLastName}
-              setPhoneNumber={setPhoneNumber}
-              setFirstName={setFirstName}
-              setAddress={setAddress}
-            />
+            handleSubmitUpdate={() => {
+              handleSubmitUpdate(patient.id);
+            }}
+            show={show}
+            handleClose={handleClose}
+            firstName={firstName}
+            lastName={lastName}
+            phoneNumber={phoneNumber}
+            email={email}
+            address={address}
+            setEmail={setEmail}
+            setLastName={setLastName}
+            setPhoneNumber={setPhoneNumber}
+            setFirstName={setFirstName}
+            setAddress={setAddress}
+          />
         </div>
       ),
     },
   ];
 
   const handleShowModal = (patient) => {
-      handleShow();
-      setFirstName(patient.firstName);
-      setLastName(patient.lastName);
-      setPhoneNumber(patient.phoneNumber);
-      setEmail(patient.email);
-      setAddress(patient.address);
+    handleShow();
+    setFirstName(patient.firstName);
+    setLastName(patient.lastName);
+    setPhoneNumber(patient.phoneNumber);
+    setEmail(patient.email);
+    setAddress(patient.address);
   };
-
-
-
 
   return (
     <>
@@ -266,7 +269,23 @@ const Booking = () => {
               </div>
             </form>
             <div className="booking-button">
-              <button onClick={handleSubmit}>Xác nhận đặt khám</button>
+              <button onClick={handleSubmit} disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <Spin
+                    style={{ color: "white" }}
+                    indicator={
+                      <LoadingOutlined
+                        style={{
+                          fontSize: 24,
+                        }}
+                        spin
+                      />
+                    }
+                  />
+                ) : (
+                  "Xác nhận đặt khám"
+                )}
+              </button>
             </div>
           </div>
         </div>

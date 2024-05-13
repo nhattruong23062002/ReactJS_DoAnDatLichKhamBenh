@@ -10,6 +10,8 @@ import { getTokenFromLocalStorage } from "../../../utils/tokenUtils";
 import jwt_decode from "jwt-decode";
 import { BASE_URL } from "../../../utils/apiConfig";
 import { Button, Input, Space, Table } from "antd";
+import { Spin, notification } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const ManageSchedule = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -22,6 +24,7 @@ const ManageSchedule = () => {
   const [activeTimes, setActiveTimes] = useState([]);
   const [role, setRole] = useState("");
   const [selectKey, setSelectKey] = useState(Date.now());
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   startDate.setHours(0, 0, 0, 0);
   const formattedStartDate = new Date(startDate).getTime();
@@ -89,35 +92,39 @@ const ManageSchedule = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      let result = [];
-      if (activeTimes && activeTimes.length > 0) {
-        activeTimes.map((time) => {
-          let object = {};
-          object.doctorId = role === "R1" ? selectedOption.value : doctorId;
-          object.date = formattedStartDate;
-          object.timeType = time;
-          object.maxNumber = 5;
-          result.push(object);
-        });
-      }
+    if (!isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        let result = [];
+        if (activeTimes && activeTimes.length > 0) {
+          activeTimes.map((time) => {
+            let object = {};
+            object.doctorId = role === "R1" ? selectedOption.value : doctorId;
+            object.date = formattedStartDate;
+            object.timeType = time;
+            object.maxNumber = 5;
+            result.push(object);
+          });
+        }
 
-      const response = await axios.post(`${BASE_URL}/schedule`, {
-        result,
-        doctorId: role === "R1" ? selectedOption.value : doctorId,
-        date: formattedStartDate,
-      });
-      if (response.data.payload.length > 0) {
-        alert("Tạo lịch thành công");
-        setActiveTimes([]);
-        setSelectedOption(null);
-        setSelectKey(Date.now());
-        getAllSchedule();
-      } else {
-        alert("Lịch đã tạo trước đó");
+        const response = await axios.post(`${BASE_URL}/schedule`, {
+          result,
+          doctorId: role === "R1" ? selectedOption.value : doctorId,
+          date: formattedStartDate,
+        });
+        if (response.data.payload.length > 0) {
+          alert("Tạo lịch thành công");
+          setActiveTimes([]);
+          setSelectedOption(null);
+          setSelectKey(Date.now());
+          getAllSchedule();
+        } else {
+          alert("Lịch đã tạo trước đó");
+        }
+      } catch (error) {
+        console.error("Error searching products:", error);
       }
-    } catch (error) {
-      console.error("Error searching products:", error);
+      setIsSubmitting(false);
     }
   };
 
@@ -227,7 +234,21 @@ const ManageSchedule = () => {
       )}
 
       <button className="btn-manageDoctor" onClick={handleSubmit}>
-        Lưu lại
+        {isSubmitting ? (
+          <Spin
+            style={{ color: "white" }}
+            indicator={
+              <LoadingOutlined
+                style={{
+                  fontSize: 24,
+                }}
+                spin
+              />
+            }
+          />
+        ) : (
+          "Lưu lại"
+        )}
       </button>
     </div>
   );

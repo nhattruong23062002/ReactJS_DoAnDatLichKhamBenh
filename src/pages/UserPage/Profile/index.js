@@ -10,10 +10,13 @@ import { BASE_URL } from "../../../utils/apiConfig";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const Profile = () => {
   const [userId, setUserId] = useState(null);
   const [tempAvatarFile, setTempAvatarFile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
   const token = getTokenFromLocalStorage();
@@ -101,49 +104,52 @@ const Profile = () => {
   };
 
   const handleSave = async (data) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", tempAvatarFile);
-      if (tempAvatarFile != null) {
-        const response = await axios.post(
-          `${BASE_URL}/users/upload-single`,
-          formData,
+    if (!isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        const formData = new FormData();
+        formData.append("file", tempAvatarFile);
+        if (tempAvatarFile != null) {
+          const response = await axios.post(
+            `${BASE_URL}/users/upload-single`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const uploadedImage = response.data.payload.location;
+          fileName = uploadedImage;
+        } else if (tempAvatarFile == null) {
+          fileName = "check";
+        }
+
+        const imageValue =
+          (await fileName) !== "check" ? fileName : watch("image");
+
+        console.log("Image to be updated:", imageValue);
+
+        await axios.patch(
+          `${BASE_URL}/users/${userId}`,
+          {
+            ...data,
+            image: imageValue,
+          },
           {
             headers: {
-              "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        const uploadedImage = response.data.payload.location;
-        fileName = uploadedImage;
-      } else if (tempAvatarFile == null) {
-        fileName = "check";
+        alert("Bạn đã cập nhật thông tin thành công");
+      } catch (error) {
+        alert("Cập nhật thông tin thất bại");
+        console.error("Error updating profile:", error);
+        throw error;
       }
-
-      const imageValue =
-        (await fileName) !== "check" ? fileName : watch("image");
-
-      console.log("Image to be updated:", imageValue);
-
-      await axios.patch(
-        `${BASE_URL}/users/${userId}`,
-        {
-          ...data,
-          image: imageValue,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      alert("Bạn đã cập nhật thông tin thành công");
-    } catch (error) {
-      alert("Cập nhật thông tin thất bại");
-      console.error("Error updating profile:", error);
-      throw error;
+      setIsSubmitting(false);
     }
   };
 
@@ -260,8 +266,23 @@ const Profile = () => {
                 <button
                   className="form-group col-md-2 btn-manageDoctor"
                   type="submit"
+                  disabled={isSubmitting}
                 >
-                  Lưu lại
+                  {isSubmitting ? (
+                    <Spin
+                      style={{ color: "white" }}
+                      indicator={
+                        <LoadingOutlined
+                          style={{
+                            fontSize: 24,
+                          }}
+                          spin
+                        />
+                      }
+                    />
+                  ) : (
+                    "Lưu lại"
+                  )}
                 </button>
               </div>
             </form>

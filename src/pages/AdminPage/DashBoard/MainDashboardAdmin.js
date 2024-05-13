@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "./../../../utils/apiConfig";
 
-
 const MainDashboardAdmin = () => {
   const [totalDoctor, setTotalDoctor] = useState("");
   const [totalPatient, setTotalPatient] = useState("");
@@ -23,9 +22,7 @@ const MainDashboardAdmin = () => {
 
   const getAllDoctor = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/users/getall-doctor?name=`
-      );
+      const response = await axios.get(`${BASE_URL}/users/getall-doctor?name=`);
       setTotalDoctor(response.data.payload.length);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -34,9 +31,7 @@ const MainDashboardAdmin = () => {
 
   const getAllPatient = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/users/getall-patient`
-      );
+      const response = await axios.get(`${BASE_URL}/users/getall-patient`);
       setTotalPatient(response.data.payload.length);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -63,9 +58,7 @@ const MainDashboardAdmin = () => {
 
   const getTopPatient = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/users/outstanding-patient`
-      );
+      const response = await axios.get(`${BASE_URL}/users/outstanding-patient`);
       setTopPatient(response.data.payload);
     } catch (error) {
       console.error("Error:", error);
@@ -74,9 +67,7 @@ const MainDashboardAdmin = () => {
 
   const getTopDoctor = async () => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}/users/outstanding-doctor`
-      );
+      const response = await axios.get(`${BASE_URL}/users/outstanding-doctor`);
       setTopDoctor(response.data.payload);
     } catch (error) {
       console.error("Error:", error);
@@ -88,7 +79,6 @@ const MainDashboardAdmin = () => {
       const response = await axios.get(
         `${BASE_URL}/booking/getAll-booking-currentWeek`
       );
-      console.log('««««« response »»»»»',response);
       setTotalBookingCurrentWeek(response.data.payload);
     } catch (error) {
       console.error("Error:", error);
@@ -117,7 +107,7 @@ const MainDashboardAdmin = () => {
             <ul className="app-breadcrumb breadcrumb">
               <li className="breadcrumb-item">
                 <a href="#">
-                  <b>Bảng điều khiển</b>
+                  <b>Dashboard</b>
                 </a>
               </li>
             </ul>
@@ -129,7 +119,10 @@ const MainDashboardAdmin = () => {
         <div className="col-md-12 col-lg-6">
           <div className="row">
             <div className="col-md-6">
-              <div className="widget-small primary coloured-icon" onClick={() => navigate("/admin/user-manage?query=R2")}>
+              <div
+                className="widget-small primary coloured-icon"
+                onClick={() => navigate("/admin/user-manage?query=R2")}
+              >
                 <div className="iicon">
                   <i className="icon">
                     <FaUserDoctor />
@@ -145,7 +138,10 @@ const MainDashboardAdmin = () => {
               </div>
             </div>
             <div className="col-md-6">
-              <div className="widget-small info coloured-icon" onClick={() => navigate("/admin/user-manage?query=R3")}>
+              <div
+                className="widget-small info coloured-icon"
+                onClick={() => navigate("/admin/user-manage?query=R3")}
+              >
                 <div className="iicon">
                   <i className="icon">
                     <IoIosPeople />
@@ -161,7 +157,10 @@ const MainDashboardAdmin = () => {
               </div>
             </div>
             <div className="col-md-6">
-              <div className="widget-small warning coloured-icon"  onClick={() => navigate("/admin/clinic-manager")}>
+              <div
+                className="widget-small warning coloured-icon"
+                onClick={() => navigate("/admin/clinic-manager")}
+              >
                 <div className="iicon">
                   <i className="icon">
                     <FaClinicMedical />
@@ -177,7 +176,10 @@ const MainDashboardAdmin = () => {
               </div>
             </div>
             <div className="col-md-6">
-              <div className="widget-small danger coloured-icon" onClick={() => navigate("/admin/specialty-manager")}>
+              <div
+                className="widget-small danger coloured-icon"
+                onClick={() => navigate("/admin/specialty-manager")}
+              >
                 <div className="iicon">
                   <i className="icon">
                     <FaBookMedical />
@@ -227,7 +229,7 @@ const MainDashboardAdmin = () => {
                 </div>
               </div>
             </div>
-            <div className="col-md-12">
+            {/*             <div className="col-md-12">
               <div className="tile">
                 <h3 className="tile-title">Khách hàng mới</h3>
                 <div>
@@ -243,7 +245,7 @@ const MainDashboardAdmin = () => {
                   </table>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="col-md-12 col-lg-6">
@@ -252,7 +254,7 @@ const MainDashboardAdmin = () => {
               <div className="tile">
                 <h3 className="tile-title">Top 5 bác sĩ nổi bật nhất</h3>
                 <div className="embed-responsive embed-responsive-16by9">
-                  <PolarAreaChart  data = {topDoctor}/>
+                  <PolarAreaChart data={topDoctor} />
                 </div>
               </div>
             </div>
@@ -262,10 +264,10 @@ const MainDashboardAdmin = () => {
                   Thống kê lượt booking trong tuần hiện tại
                 </h3>
                 <div className="embed-responsive embed-responsive-16by9">
-                   <BarChart
+                  <BarChart
                     weekDays={["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]}
                     totalBookingCurrentWeek={totalBookingCurrentWeek}
-                    />
+                  />
                 </div>
               </div>
             </div>

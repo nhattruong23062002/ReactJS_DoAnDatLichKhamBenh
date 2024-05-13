@@ -7,6 +7,8 @@ import { BASE_URL } from "../../../utils/apiConfig";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const UpdateUser = () => {
   const [gender, setGender] = useState("");
@@ -16,6 +18,7 @@ const UpdateUser = () => {
   const [selectGender, setSelectGender] = useState("");
   const [selectRole, setSelectRole] = useState("");
   const [selectPosition, setSelectPosition] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [data, setData] = useState("");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -180,52 +183,56 @@ const UpdateUser = () => {
   };
 
   const handleSave = async (data) => {
-    try {
-      const formData = new FormData();
-      formData.append("file", tempAvatarFile);
-      if (tempAvatarFile != null) {
-        const response = await axios.post(
-          `${BASE_URL}/users/upload-single`,
-          formData,
+    if (!isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        const formData = new FormData();
+        formData.append("file", tempAvatarFile);
+        if (tempAvatarFile != null) {
+          const response = await axios.post(
+            `${BASE_URL}/users/upload-single`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          const uploadedImage = response.data.payload.location;
+          fileName = uploadedImage;
+        } else if (tempAvatarFile == null) {
+          fileName = "check";
+        }
+
+        const imageValue = fileName !== "check" ? fileName : watch("image");
+
+        console.log("Image to be updated:", imageValue);
+
+        await axios.patch(
+          `${BASE_URL}/users/${id}`,
+          {
+            ...data,
+            gender: gender,
+            positionId: positionId,
+            image: imageValue,
+            roleId: roleId,
+          },
           {
             headers: {
-              "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        const uploadedImage = response.data.payload.location;
-        fileName = uploadedImage;
-      } else if (tempAvatarFile == null) {
-        fileName = "check";
+
+        alert("Bạn đã cập nhật thông tin thành công");
+        navigate("/admin/user-manage");
+      } catch (error) {
+        alert("Cập nhật thông tin thất bại");
+        console.log("Error:", error);
+        throw error;
       }
-
-      const imageValue = fileName !== "check" ? fileName : watch("image");
-
-      console.log("Image to be updated:", imageValue);
-
-      await axios.patch(
-        `${BASE_URL}/users/${id}`,
-        {
-          ...data,
-          gender: gender,
-          positionId: positionId,
-          image: imageValue,
-          roleId: roleId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      alert("Bạn đã cập nhật thông tin thành công");
-      navigate("/admin/user-manage");
-    } catch (error) {
-      alert("Cập nhật thông tin thất bại");
-      console.log("Error:", error);
-      throw error;
+      setIsSubmitting(false);
     }
   };
 
@@ -357,8 +364,26 @@ const UpdateUser = () => {
                   </div>
                 </div>
                 <div className="btn-addUser">
-                  <button className="btn btn-info" type="submit">
-                    Lưu lại
+                  <button
+                    className="btn btn-info"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <Spin
+                        style={{ color: "white" }}
+                        indicator={
+                          <LoadingOutlined
+                            style={{
+                              fontSize: 24,
+                            }}
+                            spin
+                          />
+                        }
+                      />
+                    ) : (
+                      "Lưu lại"
+                    )}
                   </button>
                   <button className="btn btn-danger" type="button">
                     Trở về

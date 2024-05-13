@@ -769,6 +769,7 @@ fieldset:disabled a.btn {
   background-color: #0ba1ec;
   color: #fff;
   margin-right: 10px;
+  width: 70px;
 }
 .btn-addUser .btn-danger {
   background-color: #ac0000;
@@ -809,13 +810,14 @@ fieldset:disabled a.btn {
   margin-top: 15px;
   border-radius: 5px;
   border: none;
+  min-width: 74px;
 }
 .more-info-doctor {
   display: flex;
   padding-bottom: 20px;
 }
 
-.more-info-doctor textArea{
+.more-info-doctor textArea {
   font-size: 16px;
 }
 

@@ -193,7 +193,7 @@
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
-                cursor: pointer;
+               /*  cursor: pointer; */
 
                 .icon-child{
                     display: flex;
@@ -213,9 +213,9 @@
                     font-weight: 500;
 
                 }
-                &:hover{
+                /* &:hover{
                     color: #49bce2;
-                }
+                } */
             }
             
         }
@@ -334,6 +334,7 @@
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
+                min-width: 180px;
             }
         }
     }
