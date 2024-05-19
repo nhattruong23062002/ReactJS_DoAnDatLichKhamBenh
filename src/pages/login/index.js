@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaGoogle, FaFacebook, FaGithub } from "react-icons/fa6";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { setTokenToLocalStorage } from "../../utils/tokenUtils";
 import styles from "./login.module.css";
@@ -264,6 +264,12 @@ const LoginForm = () => {
             {loginErrors.password && (
               <p className="error-yup">{loginErrors.password.message}</p>
             )}
+            <span className={styles.span}>
+              Forgot your{" "}
+              <a href="/forgotPassword" className={styles.forgot}>
+                password?
+              </a>
+            </span>
             <button type="submit" className={styles.button}>
               Login
             </button>
