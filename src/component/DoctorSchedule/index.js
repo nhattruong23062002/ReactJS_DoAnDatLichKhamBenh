@@ -11,7 +11,18 @@ import { BASE_URL } from "./../../utils/apiConfig";
 
 const DoctorSchedule = (id) => {
   const [timeSchedule, setTimeSchedule] = useState(null);
+  const [filteredTimeSchedule, setFilteredTimeSchedule] = useState(null);
+  const [currentDate, setCurrentDate] = useState(null);
   const [role, setRole] = useState("");
+  const [currentHour, setCurrentHour] = useState(new Date().getHours());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentHour(new Date().getHours());
+    }, 3600000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const navigate = useNavigate();
 
@@ -19,9 +30,8 @@ const DoctorSchedule = (id) => {
     const token = getTokenFromLocalStorage();
     if (token) {
       try {
-        // Giải mã token để lấy thông tin customerId
         const decodedToken = jwt_decode(token);
-        const { roleId: roleId } = decodedToken;
+        const { roleId } = decodedToken;
         setRole(roleId);
       } catch (error) {
         console.error("Error decoding token:", error);
@@ -53,6 +63,7 @@ const DoctorSchedule = (id) => {
         `${BASE_URL}/schedule?doctorId=${id.doctorId}&date=${arrDate[0].value}`
       );
       setTimeSchedule(response.data.payload);
+      setCurrentDate(arrDate[0].value);
     } catch (error) {
       console.error("Error", error);
     }
@@ -61,6 +72,23 @@ const DoctorSchedule = (id) => {
     handleScheduleToday();
   }, []);
 
+  useEffect(() => {
+    if (timeSchedule && currentDate) {
+      const filtered = timeSchedule.filter((t) => {
+        const isFull = t.currentNumber >= t.maxNumber;
+        const [startTime, endTime] = t.timeTypeData.valueVi
+          .split(" - ")
+          .map((time) => parseInt(time.split(":")[0]));
+        const isHidden =
+          currentHour > endTime &&
+          currentHour > startTime &&
+          arrDate[0].value == currentDate;
+        return !isHidden;
+      });
+      setFilteredTimeSchedule(filtered);
+    }
+  }, [timeSchedule, currentDate, currentHour]);
+
   const handleChangeOption = async (event) => {
     try {
       let date = event.target.value;
@@ -68,6 +96,7 @@ const DoctorSchedule = (id) => {
         `${BASE_URL}/schedule?doctorId=${id.doctorId}&date=${date}`
       );
       setTimeSchedule(response.data.payload);
+      setCurrentDate(date);
     } catch (error) {
       console.error("Error", error);
     }
@@ -100,8 +129,8 @@ const DoctorSchedule = (id) => {
       </div>
       <div className="list-day-schedule">
         <ul>
-          {timeSchedule && timeSchedule.length > 0 ? (
-            timeSchedule.map((t) => {
+          {filteredTimeSchedule && filteredTimeSchedule.length > 0 ? (
+            filteredTimeSchedule.map((t) => {
               const isFull = t.currentNumber >= t.maxNumber;
               return (
                 <li

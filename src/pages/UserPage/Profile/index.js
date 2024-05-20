@@ -143,13 +143,14 @@ const Profile = () => {
             },
           }
         );
+        setIsSubmitting(false);
         alert("Bạn đã cập nhật thông tin thành công");
       } catch (error) {
+        setIsSubmitting(false);
         alert("Cập nhật thông tin thất bại");
         console.error("Error updating profile:", error);
         throw error;
       }
-      setIsSubmitting(false);
     }
   };
 
