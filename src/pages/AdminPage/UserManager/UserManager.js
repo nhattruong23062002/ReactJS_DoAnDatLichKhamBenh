@@ -235,7 +235,6 @@ const UserManager = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      alert("Đã xóa thành công");
       setShow(false);
       getAllUser();
     } catch (error) {
