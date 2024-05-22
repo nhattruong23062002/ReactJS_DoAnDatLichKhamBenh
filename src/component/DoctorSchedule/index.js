@@ -80,8 +80,8 @@ const DoctorSchedule = (id) => {
           .split(" - ")
           .map((time) => parseInt(time.split(":")[0]));
         const isHidden =
-          currentHour > endTime &&
-          currentHour > startTime &&
+          currentHour >= endTime &&
+          currentHour >= startTime &&
           arrDate[0].value == currentDate;
         return !isHidden;
       });
