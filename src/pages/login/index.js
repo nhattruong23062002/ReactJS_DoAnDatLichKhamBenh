@@ -257,7 +257,7 @@ const LoginForm = () => {
             )}
             <input
               className={styles.input}
-              {...register("phoneNumber")}
+              {...loginRegister("phoneNumber")}
               type="text"
               placeholder="Phone Number"
             />
