@@ -16,7 +16,7 @@ const LoginForm = () => {
   const loginSchema = yup.object().shape({
     email: yup
       .string()
-      .email("Email phải đúng định dạng")
+      /*   .email("Email phải đúng định dạng") */
       .required("Vui lòng nhập email"),
     password: yup
       .string()
