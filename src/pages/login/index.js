@@ -16,7 +16,7 @@ const LoginForm = () => {
   const loginSchema = yup.object().shape({
     email: yup
       .string()
-      /*   .email("Email phải đúng định dạng") */
+      .email("Email phải đúng định dạng")
       .required("Vui lòng nhập email"),
     password: yup
       .string()
@@ -255,12 +255,6 @@ const LoginForm = () => {
             {loginErrors.email && (
               <p className="error-yup">{loginErrors.email.message}</p>
             )}
-            <input
-              className={styles.input}
-              {...loginRegister("phoneNumber")}
-              type="text"
-              placeholder="Phone Number"
-            />
             <input
               {...loginRegister("password")}
               className={styles.input}
