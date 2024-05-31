@@ -14,10 +14,10 @@ const LoginForm = () => {
   const navigate = useNavigate();
 
   const loginSchema = yup.object().shape({
-    email: yup
+    /*     email: yup
       .string()
-      /*   .email("Email phải đúng định dạng") */
-      .required("Vui lòng nhập email"),
+      .email("Email phải đúng định dạng")
+      .required("Vui lòng nhập email"), */
     password: yup
       .string()
       .min(6, "Password phải tối thiểu 6 ký tự")
@@ -249,7 +249,7 @@ const LoginForm = () => {
             <input
               {...loginRegister("email")}
               className={styles.input}
-              type="email"
+              /*     type="email" */
               placeholder="Email"
             />
             {loginErrors.email && (
