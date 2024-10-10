@@ -47,8 +47,8 @@ const FaceRecognition = () => {
         .detectAllFaces(
           videoRef.current,
           new faceapi.TinyFaceDetectorOptions({
-            inputSize: 320, 
-            scoreThreshold: 0.4 
+            inputSize: 320,
+            scoreThreshold: 0.4,
           })
         )
         .withFaceExpressions()
@@ -67,7 +67,7 @@ const FaceRecognition = () => {
   };
 
   return (
-    <div style={{textAlign:"center", height:"800px"}}>
+    <div className={styles.videoContainer}>
       <video
         ref={videoRef}
         width="720"
@@ -75,7 +75,7 @@ const FaceRecognition = () => {
         autoPlay
         onPlay={handleVideoPlay}
       />
-      <div>
+      <div className={styles.details}>
         <h3>Age: {age}</h3>
         <h3>Gender: {gender}</h3>
         <h3>Expressions:</h3>
