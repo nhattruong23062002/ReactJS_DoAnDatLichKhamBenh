@@ -61,6 +61,10 @@ const Header = () => {
     navigate("/profile");
   };
 
+  const handleFacialRecognition = async () => {
+    navigate("/facialRecognition");
+  };
+
   const handleLogout = () => {
     if (role === "R3") {
       removeTokenFromLocalStorage();
@@ -137,6 +141,9 @@ const Header = () => {
                 </li>
                 <li>
                   <p onClick={handleShowHistory}>Lịch hẹn đã đặt</p>
+                </li>
+                <li>
+                  <p onClick={handleFacialRecognition}>Webcam</p>
                 </li>
                 <li>
                   <p onClick={handleLogout}>Đăng xuất</p>

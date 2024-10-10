@@ -1,0 +1,14 @@
+video {
+  border: 1px solid black;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-family: Arial, sans-serif;
+  margin-bottom: 5px;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}

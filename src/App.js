@@ -41,6 +41,7 @@ import UpdateHandbook from "./pages/AdminPage/ManageHandbook/UpdateHandbook";
 import DetailHandbook from "./pages/UserPage/DetailHandbook";
 import HandbookList from "./pages/UserPage/HandbookList";
 import ChatOnline from "./pages/AdminPage/ChatOnline";
+import FaceRecognition from "./pages/facialRecognition";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
         </Route>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="/facialRecognition" element={<FaceRecognition />} />
           <Route path="/detail-doctor/:id" element={<DetailDoctor />} />
           <Route path="/booking/:timeId" element={<Booking />} />
           <Route path="/bookingSuccess" element={<BookingSuccess />} />
